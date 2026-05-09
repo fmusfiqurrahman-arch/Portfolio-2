@@ -28,22 +28,12 @@
     var themeToggle = document.getElementById('theme-toggle');
     var body        = document.body;
 
-    var flashEl = document.createElement('div');
-    flashEl.id  = 'theme-flash';
-    body.appendChild(flashEl);
-
     function switchTheme() {
         var next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         body.classList.add('theme-transitioning');
-        flashEl.style.background = next === 'dark'
-            ? 'rgba(12,12,12,0.35)' : 'rgba(250,250,248,0.35)';
-        flashEl.classList.add('active');
-        setTimeout(function () {
-            body.setAttribute('data-theme', next);
-            localStorage.setItem('mrf-theme', next);
-            flashEl.classList.remove('active');
-        }, 120);
-        setTimeout(function () { body.classList.remove('theme-transitioning'); }, 700);
+        body.setAttribute('data-theme', next);
+        localStorage.setItem('mrf-theme', next);
+        setTimeout(function () { body.classList.remove('theme-transitioning'); }, 250);
     }
 
     if (themeToggle) themeToggle.addEventListener('click', switchTheme);
@@ -266,6 +256,67 @@
         }, 100);
     } else {
         revealEls.forEach(function (el) { el.classList.add('revealed'); });
+    }
+
+    /* ─────────────────────────────────────────
+       SCROLL DIRECTION TRACKER
+    ───────────────────────────────────────── */
+    var lastScrollY = window.pageYOffset;
+    var scrollDir   = 'down';
+    window.addEventListener('scroll', function () {
+        var y = window.pageYOffset;
+        if (y !== lastScrollY) { scrollDir = y > lastScrollY ? 'down' : 'up'; }
+        lastScrollY = y;
+    }, { passive: true });
+
+    /* ─────────────────────────────────────────
+       BIDIRECTIONAL SCROLL REVEAL (style + packages)
+       Each section gets its own observer so stagger
+       indices are local to that section, not global.
+    ───────────────────────────────────────── */
+    if ('IntersectionObserver' in window) {
+        function makeBidiObserver(cards) {
+            var n = cards.length;
+            cards.forEach(function (c) { c.classList.add('from-bottom'); });
+
+            var obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    var el  = entry.target;
+                    var idx = cards.indexOf(el);
+
+                    if (entry.isIntersecting) {
+                        var fromClass  = scrollDir === 'up' ? 'from-top' : 'from-bottom';
+                        var staggerIdx = scrollDir === 'up' ? (n - 1 - idx) : idx;
+
+                        el.classList.remove('from-top', 'from-bottom');
+                        el.classList.add(fromClass);
+                        el.style.transitionDelay = (staggerIdx * 0.12) + 's';
+
+                        requestAnimationFrame(function () {
+                            requestAnimationFrame(function () { el.classList.add('revealed'); });
+                        });
+                    } else if (el.classList.contains('revealed')) {
+                        /* Only reset after the card has been shown at least once.
+                           Skipping this on initial observation prevents the observer's
+                           first-fire from corrupting the starting position. */
+                        el.style.transitionDelay = '0s';
+                        el.style.transition = 'none';          /* snap out instantly — no visible exit flash */
+                        el.classList.remove('revealed');
+                        var exitedTop = entry.boundingClientRect.top < 0;
+                        el.classList.remove('from-top', 'from-bottom');
+                        el.classList.add(exitedTop ? 'from-bottom' : 'from-top');
+                        requestAnimationFrame(function () {
+                            el.style.transition = '';           /* restore class-driven transition */
+                        });
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(function (c) { obs.observe(c); });
+        }
+
+        makeBidiObserver(Array.from(document.querySelectorAll('.style-section .pkg-reveal')));
+        makeBidiObserver(Array.from(document.querySelectorAll('.packages .pkg-reveal')));
     }
 
     /* ─────────────────────────────────────────

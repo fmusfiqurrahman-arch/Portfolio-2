@@ -86,32 +86,21 @@ body.theme-transitioning *,
 body.theme-transitioning *::before,
 body.theme-transitioning *::after {
     transition:
-        background-color 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-        background      0.55s cubic-bezier(0.4, 0, 0.2, 1),
-        color           0.55s cubic-bezier(0.4, 0, 0.2, 1),
-        border-color    0.55s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow      0.55s cubic-bezier(0.4, 0, 0.2, 1),
-        opacity         0.55s cubic-bezier(0.4, 0, 0.2, 1),
-        fill            0.55s cubic-bezier(0.4, 0, 0.2, 1),
-        stroke          0.55s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    /* Disable transform transitions during theme switch to avoid conflicts */
-    transition-property: background-color, background, color,
-                         border-color, box-shadow, opacity,
-                         fill, stroke !important;
+        background-color 0.2s ease,
+        background       0.2s ease,
+        color            0.2s ease,
+        border-color     0.2s ease,
+        box-shadow       0.2s ease,
+        fill             0.2s ease,
+        stroke           0.2s ease !important;
 }
 
-/* Overlay flash — a full-screen div that fades in/out over the switch */
+/* Overlay flash — kept as no-op (removed from JS flow) */
 #theme-flash {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 99999;
-    opacity: 0;
-    background: transparent;
-    transition: opacity 0.28s ease;
+    display: none;
 }
 #theme-flash.active {
-    opacity: 1;
+    opacity: 0;
 }
 
 html { scroll-behavior: smooth; }
@@ -317,10 +306,23 @@ h4 { font-size: clamp(1.1rem, 1.8vw, 1.4rem); }
 .stagger-children > *:nth-child(8) { transition-delay: 0.75s; }
 .stagger-children > *:nth-child(9) { transition-delay: 0.85s; }
 
+/* 7. Package cards — bidirectional vertical reveal */
+.pkg-reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    will-change: opacity, transform;
+    transition:
+        opacity   0.9s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pkg-reveal.from-top    { transform: translateY(-50px); }
+.pkg-reveal.from-bottom { transform: translateY(50px); }
+.pkg-reveal.revealed    { opacity: 1; transform: translateY(0); }
+
 /* --- Reduce motion for accessibility --- */
 @media (prefers-reduced-motion: reduce) {
     .reveal-up, .reveal-fade, .reveal-left,
-    .reveal-right, .reveal-scale, .reveal-line {
+    .reveal-right, .reveal-scale, .reveal-line, .pkg-reveal {
         opacity: 1 !important;
         transform: none !important;
         filter: none !important;
@@ -2225,6 +2227,15 @@ section { padding: 3rem 0; }
 
 .style-card { transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease; }
 .style-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+
+/* Restore opacity+transform for scroll reveal on style cards (two-class specificity beats single-class .style-card) */
+.style-card.pkg-reveal {
+    transition:
+        opacity    0.9s cubic-bezier(0.16, 1, 0.3, 1),
+        transform  0.9s cubic-bezier(0.16, 1, 0.3, 1),
+        background 0.4s ease,
+        box-shadow 0.4s ease;
+}
 
 .featured-item { transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease; }
 .featured-item:hover { transform: translateX(6px); }
