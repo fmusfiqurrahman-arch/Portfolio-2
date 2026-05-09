@@ -1,0 +1,768 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Musfiqur Rahman Fahim — Wedding & Portrait Photographer based in Dhaka, Bangladesh. Award-winning cinematic photography that tells your story beautifully.">
+    <meta name="keywords" content="wedding photographer Dhaka, portrait photographer Bangladesh, Musfiqur Rahman Fahim, cinematic photography">
+    <meta name="author" content="Musfiqur Rahman Fahim">
+    <meta property="og:title" content="Musfiqur Rahman Fahim — Wedding & Portrait Photographer">
+    <meta property="og:description" content="Cinematic. Emotional. Story-driven. Based in Dhaka, Bangladesh.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Musfiqur Rahman Fahim — Wedding & Portrait Photographer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-theme="light">
+    <!-- Apply saved theme instantly to prevent flash -->
+    <script>
+        (function() {
+            var t = localStorage.getItem('mrf-theme');
+            if (t) document.body.setAttribute('data-theme', t);
+        })();
+    </script>
+
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">
+                <span class="preloader-initials">MRF</span>
+                <div class="preloader-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <span class="nav-logo-main">MRF</span>
+                <span class="nav-logo-sub">Photography</span>
+            </a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="#packages" class="nav-link">Packages</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#contact" class="btn btn-nav">Book a Session</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                        <svg class="theme-icon sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="theme-icon moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-slider">
+            <div class="hero-slide active">
+                <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1920&q=85'); background-position: center 30%;"></div>
+            </div>
+            <div class="hero-slide">
+                <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1606216794079-c8f53a0f7b9e?w=1920&q=85'); background-position: center 20%;"></div>
+            </div>
+            <div class="hero-slide">
+                <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1920&q=85'); background-position: center 25%;"></div>
+            </div>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-location">&#9670; Dhaka, Bangladesh</span>
+            <p class="hero-name">Musfiqur Rahman Fahim</p>
+            <h1 class="hero-title">
+                The look she gave him<br>
+                <em>before she knew I was watching.</em>
+            </h1>
+            <p class="hero-description">Wedding & Portrait Photographer — Dhaka &amp; Worldwide.<br>I photograph the moments between moments.</p>
+            <div class="hero-cta">
+                <a href="#contact" class="btn btn-primary btn-magnetic">Check Availability</a>
+                <a href="#portfolio" class="btn btn-secondary btn-magnetic">View My Work</a>
+            </div>
+            <div class="hero-trust">
+                <span>500+ Weddings</span>
+                <span class="hero-trust-dot"></span>
+                <span>10 Years</span>
+                <span class="hero-trust-dot"></span>
+                <span>50+ Awards</span>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>Scroll to explore</span>
+            <div class="scroll-indicator"></div>
+        </div>
+        <div class="slider-controls">
+            <button class="slider-btn prev" aria-label="Previous slide">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div class="slider-dots"></div>
+            <button class="slider-btn next" aria-label="Next slide">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- Signature Style Section -->
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="bento-top">
+                <div class="bento-bio reveal-left">
+                    <span class="section-label reveal-fade" data-delay="100">About Fahim</span>
+                    <h2 class="section-title reveal-up" data-delay="150">You Won't Remember<br>the Flowers.</h2>
+                    <p class="lead reveal-up" data-delay="250">You'll remember the way he looked at you. The laugh that escaped before the vows. Your mother's face when you walked in.</p>
+                    <p class="reveal-up" data-delay="350">I'm Fahim. For over a decade I've photographed weddings and portraits across Bangladesh and internationally — not to document your day, but to preserve the feeling of it. The images I make are ones you'll pull out ten years from now and feel everything all over again.</p>
+                    <p class="about-quote reveal-fade" data-delay="450">"I don't photograph weddings. I photograph the love inside them."</p>
+                    <div class="about-stats reveal-up" data-delay="500">
+                        <div class="stat">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Sessions</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">10+</span>
+                            <span class="stat-label">Years</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Awards</span>
+                        </div>
+                    </div>
+                    <div class="about-cta-wrap reveal-up" data-delay="600">
+                        <a href="#contact" class="btn btn-primary about-cta">Let's Work Together</a>
+                    </div>
+                </div>
+                <div class="bento-photo reveal-right" data-delay="200">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="Musfiqur Rahman Fahim — Photographer" loading="lazy">
+                    <div class="bento-photo-tag">
+                        <strong>Musfiqur Rahman Fahim</strong>
+                        <span>Wedding &amp; Portrait Photographer</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-bottom stagger-children">
+                <div class="bento-card bento-experience">
+                    <p class="bento-card-label">Experience</p>
+                    <div class="exp-drum-wrap">
+
+                        <!-- Left: spinning drum wheel -->
+                        <div class="exp-drum-outer">
+                            <div class="exp-drum-shaft left"></div>
+                            <div class="exp-drum-body">
+                                <div class="exp-drum-face" id="exp-drum-face">
+                                    <!-- teeth generated by JS -->
+                                </div>
+                                <div class="exp-drum-sheen"></div>
+                                <div class="exp-drum-edge top"></div>
+                                <div class="exp-drum-edge bottom"></div>
+                            </div>
+                            <div class="exp-drum-shaft right"></div>
+                        </div>
+
+                        <!-- Right: milestone text panel -->
+                        <div class="exp-drum-panel">
+                            <div class="exp-drum-window">
+                                <div class="exp-drum-entries" id="exp-drum-entries">
+                                    <!-- JS rendered -->
+                                </div>
+                            </div>
+                            <div class="exp-drum-progress">
+                                <div class="exp-drum-fill" id="exp-drum-fill"></div>
+                            </div>
+                            <div class="exp-drum-nav">
+                                <button class="exp-drum-prev" id="exp-drum-prev" aria-label="Previous">&#8593;</button>
+                                <span class="exp-drum-counter" id="exp-drum-counter">1 / 5</span>
+                                <button class="exp-drum-next" id="exp-drum-next" aria-label="Next">&#8595;</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="bento-card bento-tools">
+                    <p class="bento-card-label">Tools & Gear</p>
+                    <div class="tools-group">
+                        <p class="tools-group-label tools-gold">Camera</p>
+                        <div class="tools-pills">
+                            <span class="pill pill-gold">Canon EOS R5</span>
+                            <span class="pill pill-gold">50mm f/1.2</span>
+                            <span class="pill pill-gold">85mm f/1.4</span>
+                            <span class="pill pill-gold">24-70mm f/2.8</span>
+                        </div>
+                    </div>
+                    <div class="tools-group">
+                        <p class="tools-group-label">Editing</p>
+                        <div class="tools-pills">
+                            <span class="pill">Lightroom</span>
+                            <span class="pill">Photoshop</span>
+                            <span class="pill">Capture One</span>
+                            <span class="pill">DaVinci Resolve</span>
+                        </div>
+                    </div>
+                    <div class="tools-group">
+                        <p class="tools-group-label">Workflow</p>
+                        <div class="tools-pills">
+                            <span class="pill">Notion</span>
+                            <span class="pill">Calendly</span>
+                            <span class="pill">WeTransfer</span>
+                            <span class="pill">Google Drive</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bento-card bento-featured">
+                    <p class="bento-card-label">Featured In</p>
+                    <div class="featured-list">
+                        <div class="featured-item"><span class="featured-name">Vogue</span></div>
+                        <div class="featured-item"><span class="featured-name">Harper's Bazaar</span></div>
+                        <div class="featured-item"><span class="featured-name">The New York Times</span></div>
+                        <div class="featured-item"><span class="featured-name">National Geographic</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Signature Style Section -->
+    <section class="style-section" id="style">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label reveal-fade">My Approach</span>
+                <h2 class="section-title reveal-up" data-delay="100">A Signature Style</h2>
+                <p class="section-description reveal-up" data-delay="200">Every session is a collaboration. Every image is an emotion preserved forever.</p>
+            </div>
+            <div class="style-grid stagger-children">
+                <div class="style-card reveal-scale">
+                    <div class="style-number">01</div>
+                    <h3>Cinematic</h3>
+                    <p>Each frame composed like a film still — dramatic light, purposeful depth, cinematic mood that stops time.</p>
+                </div>
+                <div class="style-card reveal-scale">
+                    <div class="style-number">02</div>
+                    <h3>Emotional</h3>
+                    <p>I capture the tear before it falls, the laugh between vows — raw, unfiltered human connection.</p>
+                </div>
+                <div class="style-card reveal-scale">
+                    <div class="style-number">03</div>
+                    <h3>Natural Light</h3>
+                    <p>Sculpted by golden hour and soft diffused light — never harsh, always flattering and warm.</p>
+                </div>
+                <div class="style-card reveal-scale">
+                    <div class="style-number">04</div>
+                    <h3>Story-Driven</h3>
+                    <p>Your wedding day is a chapter. I photograph it so your grandchildren will feel what you felt.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label reveal-fade">Portfolio</span>
+                <h2 class="section-title reveal-up" data-delay="100">Stories I've Told</h2>
+                <p class="section-description reveal-up" data-delay="200">A curated selection of weddings, portraits and editorial work across Bangladesh and beyond</p>
+            </div>
+            <div class="portfolio-filters reveal-fade" data-delay="150">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="wedding">Weddings</button>
+                <button class="filter-btn" data-filter="portrait">Portraits</button>
+                <button class="filter-btn" data-filter="editorial">Editorial</button>
+                <button class="filter-btn" data-filter="commercial">Commercial</button>
+            </div>
+            <div class="portfolio-grid stagger-children" id="portfolio-grid">
+                <div class="portfolio-item card-3d reveal-scale" data-category="wedding">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80" alt="Wedding photography" loading="lazy">
+                    <div class="portfolio-overlay"><h4>Elegant Wedding</h4><span class="portfolio-category">Wedding</span></div>
+                </div>
+                <div class="portfolio-item card-3d" data-category="portrait">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="Portrait photography" loading="lazy">
+                    <div class="portfolio-overlay"><h4>Creative Portrait</h4><span class="portfolio-category">Portrait</span></div>
+                </div>
+                <div class="portfolio-item card-3d" data-category="commercial">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80" alt="Commercial photography" loading="lazy">
+                    <div class="portfolio-overlay"><h4>Brand Campaign</h4><span class="portfolio-category">Commercial</span></div>
+                </div>
+                <div class="portfolio-item card-3d" data-category="editorial">
+                    <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80" alt="Editorial photography" loading="lazy">
+                    <div class="portfolio-overlay"><h4>Fashion Editorial</h4><span class="portfolio-category">Editorial</span></div>
+                </div>
+                <div class="portfolio-item card-3d" data-category="wedding">
+                    <img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=80" alt="Wedding photography" loading="lazy">
+                    <div class="portfolio-overlay"><h4>Romantic Ceremony</h4><span class="portfolio-category">Wedding</span></div>
+                </div>
+                <div class="portfolio-item card-3d" data-category="portrait">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80" alt="Portrait photography" loading="lazy">
+                    <div class="portfolio-overlay"><h4>Personal Branding</h4><span class="portfolio-category">Portrait</span></div>
+                </div>
+                <div class="portfolio-item card-3d" data-category="wedding">
+                    <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&q=80" alt="Destination wedding" loading="lazy">
+                    <div class="portfolio-overlay"><h4>Destination Wedding</h4><span class="portfolio-category">Wedding</span></div>
+                </div>
+                <div class="portfolio-item card-3d" data-category="portrait">
+                    <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&q=80" alt="Portrait photography" loading="lazy">
+                    <div class="portfolio-overlay"><h4>Executive Portrait</h4><span class="portfolio-category">Portrait</span></div>
+                </div>
+                <div class="portfolio-item card-3d" data-category="editorial">
+                    <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&q=80" alt="Editorial photography" loading="lazy">
+                    <div class="portfolio-overlay"><h4>Magazine Editorial</h4><span class="portfolio-category">Editorial</span></div>
+                </div>
+            </div>
+
+            <!-- C3: Full-bleed WOW moment -->
+            <div class="portfolio-wow">
+                <div class="portfolio-wow-image" style="background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=90'); background-position: center 35%;"></div>
+                <div class="portfolio-wow-overlay"></div>
+                <div class="portfolio-wow-caption">
+                    <span class="portfolio-wow-names">Nadia &amp; Rafiq</span>
+                    <span class="portfolio-wow-place">Dhaka, Bangladesh &mdash; 2024</span>
+                </div>
+                <a href="#portfolio" class="btn portfolio-wow-btn">View Gallery</a>
+            </div>
+
+            <div class="portfolio-cta reveal-up">
+                <p>Your story deserves to be told this beautifully.</p>
+                <div class="portfolio-cta-btns">
+                    <button type="button" class="btn btn-outline portfolio-gallery-btn" id="portfolio-gallery-btn">View Full Gallery</button>
+                    <a href="#contact" class="btn btn-primary">Check My Availability</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" aria-label="Close lightbox">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <button class="lightbox-nav prev" aria-label="Previous image">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="lightbox-nav next" aria-label="Next image">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        <div class="lightbox-content">
+            <img src="" alt="" id="lightbox-img">
+            <div class="lightbox-caption"><h4 id="lightbox-title"></h4><span id="lightbox-category"></span></div>
+        </div>
+    </div>
+
+    <!-- Packages Section -->
+    <section class="packages" id="packages">
+        <div class="container">
+            <div class="section-header centered reveal-up">
+                <span class="section-label">Investment</span>
+                <h2 class="section-title">Your Day, Your Investment</h2>
+                <p class="section-description">Investments begin at $500. Full wedding coverage from $3,500.<br>Every package includes my complete creative commitment — not just my time.</p>
+            </div>
+            <div class="packages-grid reveal-up">
+
+                <!-- Portrait -->
+                <div class="package-card">
+                    <div class="package-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="package-header">
+                        <span class="package-name">Portrait Photography</span>
+                        <p class="package-desc">Professional headshots, personal branding, and portrait sessions that capture your authentic self.</p>
+                        <div class="package-price">
+                            <span class="package-starting">Starting at</span>
+                            <span class="package-currency">$</span><span class="package-amount">500</span>
+                        </div>
+                        <span class="package-duration">2-hour session</span>
+                    </div>
+                    <ul class="package-includes">
+                        <li>2-hour session</li>
+                        <li>50+ edited photos</li>
+                        <li>Online gallery</li>
+                        <li>Print rights included</li>
+                        <li>Delivered in 2 weeks</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline book-service" data-service="Portrait Photography">Book Now</a>
+                </div>
+
+                <!-- Wedding — featured -->
+                <div class="package-card package-featured">
+                    <span class="package-badge">Most Popular</span>
+                    <div class="package-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </div>
+                    <div class="package-header">
+                        <span class="package-name">Wedding Photography</span>
+                        <p class="package-desc">Complete wedding day coverage with cinematic storytelling and timeless elegance.</p>
+                        <div class="package-price">
+                            <span class="package-starting">Starting at</span>
+                            <span class="package-currency">$</span><span class="package-amount">3,500</span>
+                        </div>
+                        <span class="package-duration">8-hour coverage</span>
+                    </div>
+                    <ul class="package-includes">
+                        <li>8-hour coverage</li>
+                        <li>500+ edited photos</li>
+                        <li>Engagement session</li>
+                        <li>Custom album included</li>
+                        <li>Second photographer</li>
+                        <li>Delivered in 6 weeks</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary book-service" data-service="Wedding Photography">Book Now</a>
+                </div>
+
+                <!-- Commercial -->
+                <div class="package-card">
+                    <div class="package-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                    </div>
+                    <div class="package-header">
+                        <span class="package-name">Commercial Photography</span>
+                        <p class="package-desc">Product photography, brand campaigns, and corporate headshots for businesses.</p>
+                        <div class="package-price">
+                            <span class="package-starting">Starting at</span>
+                            <span class="package-currency">$</span><span class="package-amount">1,200</span>
+                        </div>
+                        <span class="package-duration">Half-day session</span>
+                    </div>
+                    <ul class="package-includes">
+                        <li>Half-day session</li>
+                        <li>100+ edited photos</li>
+                        <li>Commercial usage rights</li>
+                        <li>Brand guideline adherence</li>
+                        <li>Delivered in 3 weeks</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline book-service" data-service="Commercial Photography">Book Now</a>
+                </div>
+
+                <!-- Editorial -->
+                <div class="package-card">
+                    <div class="package-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <div class="package-header">
+                        <span class="package-name">Editorial Photography</span>
+                        <p class="package-desc">Magazine spreads, fashion editorials, and artistic conceptual photography.</p>
+                        <div class="package-price">
+                            <span class="package-starting">Starting at</span>
+                            <span class="package-currency">$</span><span class="package-amount">2,000</span>
+                        </div>
+                        <span class="package-duration">Full-day session</span>
+                    </div>
+                    <ul class="package-includes">
+                        <li>Full-day session</li>
+                        <li>Concept development</li>
+                        <li>200+ edited photos</li>
+                        <li>Location scouting</li>
+                        <li>Styling consultation</li>
+                        <li>Delivered in 4 weeks</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline book-service" data-service="Editorial Photography">Book Now</a>
+                </div>
+
+                <!-- Custom / Let's Talk -->
+                <div class="package-card package-letstalk">
+                    <div class="package-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="package-header">
+                        <span class="package-name">Custom Package</span>
+                        <p class="package-desc">Something unique in mind? Let's build the perfect shoot around your vision.</p>
+                        <div class="package-price">
+                            <span class="package-custom">Let's Talk</span>
+                        </div>
+                        <span class="package-duration">Fully bespoke</span>
+                    </div>
+                    <ul class="package-includes">
+                        <li>Multi-day or destination shoots</li>
+                        <li>Commercial campaigns</li>
+                        <li>Editorial & magazine work</li>
+                        <li>Flexible timeline</li>
+                        <li>Custom deliverables</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline">Get a Quote</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header centered reveal-up">
+                <span class="section-label">Testimonials</span>
+                <h2 class="section-title">What Clients Say</h2>
+                <p class="section-description">The greatest compliment is a client who sends their friends</p>
+            </div>
+            <div class="testimonials-slider reveal-up">
+                <div class="testimonial-track">
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <p class="testimonial-text">"It rained for three hours during our wedding in Dhaka. I was devastated. Fahim pulled me aside and said — trust me, rain makes the best light. When I saw the photos, I cried. Every single rainy frame looked like a scene from a film. Our guests still ask us who our photographer was."</p>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80" alt="Nadia & Rafiq" loading="lazy">
+                            <div class="testimonial-info">
+                                <h4>Nadia &amp; Rafiq Hossain</h4>
+                                <span>Wedding — Dhaka, December 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <p class="testimonial-text">"There is one photo Fahim took where my husband doesn't know I'm looking at him. I'm watching him from across the room and the way my face looks — I didn't know I could look at someone like that. I've printed it. It's hanging in our home. Nothing else needs to be said."</p>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80" alt="Sadia & Imran" loading="lazy">
+                            <div class="testimonial-info">
+                                <h4>Sadia &amp; Imran Khan</h4>
+                                <span>Wedding — Chittagong, August 2023</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <p class="testimonial-text">"I booked Fahim for a brand portrait session expecting standard headshots. What I received were photographs that looked like they belonged in Vogue. My LinkedIn profile picture has received more comments in two months than my previous one did in four years. He doesn't just take photos — he understands light in a way most photographers never will."</p>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80" alt="Arif Chowdhury" loading="lazy">
+                            <div class="testimonial-info">
+                                <h4>Arif Chowdhury</h4>
+                                <span>Brand Portrait Session — 2023</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="testimonials-controls">
+                <button class="testimonial-btn prev" aria-label="Previous">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div class="testimonial-dots"></div>
+                <button class="testimonial-btn next" aria-label="Next">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="cta-banner reveal-up">
+        <div class="container">
+            <div class="cta-banner-inner">
+                <div class="cta-banner-text">
+                    <h2>Some dates fill up a year in advance.</h2>
+                    <p>Check whether your date is still available.</p>
+                </div>
+                <div class="cta-banner-actions">
+                    <a href="#contact" class="btn btn-primary">Check Availability</a>
+                    <a href="#packages" class="btn btn-outline-light">View Packages</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header centered reveal-up">
+                <span class="section-label">Get in Touch</span>
+                <h2 class="section-title">Let's Create Together</h2>
+                <p class="section-description">Tell me about your vision. I'll tell you how we'll make it unforgettable.</p>
+            </div>
+            <div class="contact-grid reveal-up">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <a href="mailto:hello@mrfphotography.com">hello@mrfphotography.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>WhatsApp</h4>
+                            <a href="tel:+8801700000000">+880 1700 000 000</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Based In</h4>
+                            <p>Dhaka, Bangladesh</p>
+                        </div>
+                    </div>
+                    <div class="contact-social">
+                        <h4>Follow My Work</h4>
+                        <div class="social-links">
+                            <a href="#" aria-label="Instagram">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            </a>
+                            <a href="#" aria-label="Facebook">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                            </a>
+                            <a href="#" aria-label="LinkedIn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="contact-form" id="contact-form" novalidate>
+                    <div class="form-group">
+                        <label for="name">Your Name *</label>
+                        <input type="text" id="name" name="name" required placeholder="How should I address you?">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Tell Me About Your Day *</label>
+                        <textarea id="message" name="message" rows="6" required placeholder="Where is your wedding? When? What do you want to feel when you look at your photos ten years from now?"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary contact-submit">
+                        <span class="submit-text">Send My Story</span>
+                        <span class="submit-loading" aria-hidden="true">Sending&hellip;</span>
+                    </button>
+                    <div class="form-success" id="form-success" role="alert">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <div>
+                            <strong>Message received.</strong>
+                            <span>I'll be in touch within 24 hours. I'm already looking forward to hearing your story.</span>
+                        </div>
+                    </div>
+                    <div class="form-error" id="form-error" role="alert">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <div>
+                            <strong>Something went wrong.</strong>
+                            <span>Please email me directly at <a href="mailto:hello@mrfphotography.com">hello@mrfphotography.com</a></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h3>Musfiqur Rahman Fahim</h3>
+                    <p>Wedding & Portrait Photographer<br>Based in Dhaka, Bangladesh</p>
+                    <a href="#contact" class="btn btn-primary footer-cta">Your Story is Waiting</a>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Instagram">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="#" aria-label="Facebook">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        </a>
+                        <a href="#" aria-label="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Photography</h4>
+                        <ul>
+                            <li><a href="#portfolio">Wedding Photography</a></li>
+                            <li><a href="#portfolio">Portrait Sessions</a></li>
+                            <li><a href="#portfolio">Editorial Work</a></li>
+                            <li><a href="#portfolio">Commercial</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Navigate</h4>
+                        <ul>
+                            <li><a href="#about">About Fahim</a></li>
+                            <li><a href="#style">My Style</a></li>
+                            <li><a href="#packages">Packages</a></li>
+                            <li><a href="#testimonials">Testimonials</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Licensing</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Musfiqur Rahman Fahim. All rights reserved.</p>
+                <p>Crafted with <span class="heart">&#9829;</span> in Dhaka</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="booking-modal">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <h3>Book a Session</h3>
+            <p>Select your preferred service and we'll find the perfect time together.</p>
+            <div class="modal-service">
+                <strong>Selected Service:</strong>
+                <span id="selected-service">Portrait Photography</span>
+            </div>
+            <div class="calendly-placeholder">
+                <div class="calendly-icon">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+                <h4>Schedule Your Session</h4>
+                <p>Integrate Calendly to enable direct booking.</p>
+                <ol>
+                    <li>Sign up at calendly.com</li>
+                    <li>Create your event types</li>
+                    <li>Paste your embed code here</li>
+                </ol>
+                <a href="https://calendly.com" target="_blank" class="btn btn-primary">Set Up Calendly</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
