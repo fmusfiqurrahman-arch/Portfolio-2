@@ -620,7 +620,7 @@
        truth. GALLERY_DATA is built from it so
        the gallery folders always stay in sync.
     ───────────────────────────────────────── */
-    var PORTFOLIO_ALBUMS = [
+    var PORTFOLIO_ALBUMS = (window.MRF_CMS && window.MRF_CMS.data && window.MRF_CMS.data.portfolioAlbums) || [
         /* ── Weddings ─────────────────────── */
         { id: 'elegant-wedding',    category: 'wedding',    title: 'Elegant Wedding',
           images: [

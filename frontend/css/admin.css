@@ -1,0 +1,850 @@
+/* ===========================
+   MRF Photography — admin.css
+   Admin Panel Styles
+   =========================== */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --gold:        #C9A661;
+    --gold-light:  #dfc088;
+    --dark:        #111111;
+    --dark-2:      #1a1a1a;
+    --dark-3:      #222222;
+    --sidebar-txt: #cccccc;
+    --sidebar-sub: #888888;
+    --bg:          #f5f5f5;
+    --surface:     #ffffff;
+    --border:      #e2e2e2;
+    --text:        #1a1a1a;
+    --text-muted:  #666666;
+    --danger:      #e53e3e;
+    --success:     #38a169;
+    --radius:      8px;
+    --shadow:      0 2px 12px rgba(0,0,0,0.08);
+    --sidebar-w:   240px;
+    --transition:  0.18s ease;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+}
+
+/* ── Login Screen ─────────────────────────────── */
+.adm-login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--dark);
+    padding: 1rem;
+}
+
+.adm-login-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.adm-login-logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.adm-login-logo-mark {
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    font-family: 'Playfair Display', Georgia, serif;
+    line-height: 1;
+}
+
+.adm-login-logo span {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
+
+.adm-login-card h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+    text-align: center;
+}
+
+.adm-login-error {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    color: var(--danger);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    display: none;
+}
+
+.adm-login-error.visible { display: block; }
+
+/* ── Layout ───────────────────────────────────── */
+.adm-app {
+    display: none;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.adm-app.visible {
+    display: flex;
+}
+
+.adm-layout {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+/* ── Sidebar ──────────────────────────────────── */
+.adm-sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-shrink: 0;
+}
+
+.adm-sidebar-brand {
+    padding: 1.5rem 1.25rem 1.2rem;
+    border-bottom: 1px solid var(--dark-3);
+}
+
+.adm-sidebar-brand-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    font-family: 'Playfair Display', Georgia, serif;
+}
+
+.adm-sidebar-brand-sub {
+    font-size: 0.7rem;
+    color: var(--sidebar-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 0.2rem;
+}
+
+.adm-nav {
+    flex: 1;
+    padding: 0.75rem 0;
+    overflow-y: auto;
+}
+
+.adm-nav-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--sidebar-sub);
+    padding: 0.75rem 1.25rem 0.4rem;
+}
+
+.adm-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.25rem;
+    color: var(--sidebar-txt);
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+    white-space: nowrap;
+}
+
+.adm-nav-item:hover {
+    background: var(--dark-2);
+    color: #ffffff;
+}
+
+.adm-nav-item.active {
+    background: var(--dark-2);
+    color: var(--gold);
+    border-left-color: var(--gold);
+}
+
+.adm-nav-item svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.adm-nav-item.active svg,
+.adm-nav-item:hover svg {
+    opacity: 1;
+}
+
+.adm-sidebar-footer {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--dark-3);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* ── Content Area ─────────────────────────────── */
+.adm-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    background: var(--bg);
+    min-width: 0;
+}
+
+/* ── Card ─────────────────────────────────────── */
+.adm-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.adm-section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.adm-section-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 1.2em;
+    background: var(--gold);
+    border-radius: 2px;
+}
+
+.adm-subsection-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text);
+}
+
+/* ── Form Fields ──────────────────────────────── */
+.adm-field {
+    margin-bottom: 1.1rem;
+}
+
+.adm-field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.adm-input,
+.adm-textarea,
+.adm-select {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    outline: none;
+}
+
+.adm-input:focus,
+.adm-textarea:focus,
+.adm-select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,166,97,0.15);
+}
+
+.adm-textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+}
+
+.adm-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2rem;
+    cursor: pointer;
+}
+
+/* ── Buttons ──────────────────────────────────── */
+.adm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: background var(--transition), opacity var(--transition), transform var(--transition);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.adm-btn:active { transform: scale(0.97); }
+
+.adm-btn--primary {
+    background: var(--gold);
+    color: #fff;
+}
+.adm-btn--primary:hover { background: var(--gold-light); }
+
+.adm-btn--danger {
+    background: var(--danger);
+    color: #fff;
+}
+.adm-btn--danger:hover { opacity: 0.85; }
+
+.adm-btn--ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+.adm-btn--ghost:hover { background: var(--bg); }
+
+.adm-btn--dark {
+    background: var(--dark-2);
+    color: #ddd;
+}
+.adm-btn--dark:hover { background: var(--dark-3); color: #fff; }
+
+.adm-btn--sm {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.78rem;
+}
+
+/* ── Pill List ────────────────────────────────── */
+.adm-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    min-height: 36px;
+}
+
+.adm-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.3rem 0.7rem 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text);
+}
+
+.adm-pill-gold {
+    background: rgba(201,166,97,0.12);
+    border-color: rgba(201,166,97,0.4);
+    color: #a07c3a;
+}
+
+.adm-pill-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: color var(--transition);
+}
+.adm-pill-remove:hover { color: var(--danger); }
+
+.adm-add-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.adm-add-row .adm-input {
+    flex: 1;
+}
+
+/* ── Album Cards ──────────────────────────────── */
+.adm-album-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.adm-album-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.adm-album-card-head {
+    background: var(--bg);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.adm-album-card-head:hover { background: #ececec; }
+
+.adm-album-toggle-icon {
+    transition: transform var(--transition);
+    flex-shrink: 0;
+    color: var(--text-muted);
+}
+
+.adm-album-card.open .adm-album-toggle-icon {
+    transform: rotate(90deg);
+}
+
+.adm-album-card-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex: 1;
+}
+
+.adm-album-card-cat {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--border);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.adm-album-card-body {
+    display: none;
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.adm-album-card.open .adm-album-card-body {
+    display: block;
+}
+
+/* ── Image Grid ───────────────────────────────── */
+.adm-image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.adm-thumb-wrap {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.adm-thumb {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+}
+
+.adm-thumb-label {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.adm-thumb-delete {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: background var(--transition);
+    line-height: 1;
+}
+.adm-thumb-delete:hover { background: var(--danger); }
+
+.adm-add-image-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+/* ── Image Preview ────────────────────────────── */
+.adm-img-preview {
+    width: 100%;
+    max-height: 160px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    border: 1px solid var(--border);
+    display: none;
+}
+
+.adm-img-preview.visible { display: block; }
+
+/* ── Toggle Switch ────────────────────────────── */
+.adm-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+}
+
+.adm-toggle {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.adm-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.adm-toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.adm-toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 3px;
+    top: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform var(--transition);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.adm-toggle input:checked + .adm-toggle-slider {
+    background: var(--gold);
+}
+
+.adm-toggle input:checked + .adm-toggle-slider::before {
+    transform: translateX(18px);
+}
+
+.adm-toggle-label {
+    font-size: 0.85rem;
+    color: var(--text);
+}
+
+/* ── Toast ────────────────────────────────────── */
+.adm-toast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    z-index: 9999;
+    transform: translateY(10px);
+    opacity: 0;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    pointer-events: none;
+    max-width: 320px;
+}
+
+.adm-toast.adm-toast--success { background: var(--success); }
+.adm-toast.adm-toast--error   { background: var(--danger);  }
+
+.adm-toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ── Stats Row ────────────────────────────────── */
+.adm-stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    align-items: end;
+}
+
+.adm-stats-row .adm-field { margin-bottom: 0; }
+
+/* ── Divider ──────────────────────────────────── */
+.adm-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.25rem 0;
+}
+
+/* ── Package Card ─────────────────────────────── */
+.adm-pkg-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.adm-pkg-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.adm-pkg-head {
+    padding: 0.75rem 1rem;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.adm-pkg-head:hover { background: #ececec; }
+
+.adm-pkg-title {
+    flex: 1;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.adm-pkg-toggle-icon {
+    transition: transform var(--transition);
+    color: var(--text-muted);
+}
+
+.adm-pkg-card.open .adm-pkg-toggle-icon {
+    transform: rotate(90deg);
+}
+
+.adm-pkg-body {
+    display: none;
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.adm-pkg-card.open .adm-pkg-body { display: block; }
+
+.adm-price-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+/* ── Testimonial Card ─────────────────────────── */
+.adm-testi-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.adm-testi-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+.adm-testi-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.adm-testi-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* ── Experience ───────────────────────────────── */
+.adm-exp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.adm-exp-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    position: relative;
+}
+
+.adm-exp-fields {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.adm-exp-fields .adm-field { margin-bottom: 0; }
+
+.adm-exp-delete {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+}
+
+/* ── Header Actions Row ───────────────────────── */
+.adm-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+/* ── Save bar ─────────────────────────────────── */
+.adm-save-bar {
+    position: sticky;
+    bottom: 0;
+    margin-top: 1.5rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 768px) {
+    :root { --sidebar-w: 200px; }
+
+    .adm-content { padding: 1.25rem 1rem; }
+
+    .adm-add-image-row {
+        grid-template-columns: 1fr;
+    }
+
+    .adm-price-row,
+    .adm-exp-fields {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .adm-sidebar {
+        width: 52px;
+        min-width: 52px;
+    }
+
+    .adm-sidebar-brand-name,
+    .adm-sidebar-brand-sub,
+    .adm-nav-item span,
+    .adm-nav-label,
+    .adm-sidebar-footer .adm-btn span {
+        display: none;
+    }
+
+    .adm-nav-item {
+        justify-content: center;
+        padding: 0.7rem;
+        border-left: none;
+        border-bottom: 2px solid transparent;
+    }
+
+    .adm-nav-item.active {
+        border-left: none;
+        border-bottom-color: var(--gold);
+    }
+
+    .adm-nav-item svg { opacity: 1; }
+
+    .adm-sidebar-footer {
+        align-items: center;
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+/* ── Scrollbars ───────────────────────────────── */
+.adm-sidebar::-webkit-scrollbar,
+.adm-content::-webkit-scrollbar,
+.adm-nav::-webkit-scrollbar {
+    width: 4px;
+}
+.adm-sidebar::-webkit-scrollbar-track  { background: transparent; }
+.adm-sidebar::-webkit-scrollbar-thumb  { background: var(--dark-3); border-radius: 4px; }
+.adm-content::-webkit-scrollbar-track  { background: transparent; }
+.adm-content::-webkit-scrollbar-thumb  { background: #ccc; border-radius: 4px; }
+
+/* ── Utility ──────────────────────────────────── */
+.adm-mt-1 { margin-top: 1rem; }
+.adm-flex  { display: flex; align-items: center; gap: 0.5rem; }
+.adm-ml-auto { margin-left: auto; }
+.adm-text-muted { color: var(--text-muted); font-size: 0.8rem; }
+.adm-w-full { width: 100%; }
