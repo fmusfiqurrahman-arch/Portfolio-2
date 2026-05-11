@@ -180,7 +180,7 @@
         var SESSION_KEY = 'mrf_admin';
 
         /* Already logged in — go straight to admin */
-        if (localStorage.getItem(SESSION_KEY) === '1') {
+        if (sessionStorage.getItem(SESSION_KEY) === 'true') {
             window.location.replace('admin.html');
         }
 
@@ -192,8 +192,8 @@
         function attempt() {
             errorEl.classList.remove('visible');
             if (userInp.value.trim() === ADMIN_USER && passInp.value === ADMIN_PASS) {
-                localStorage.setItem(SESSION_KEY, '1');
-                window.location.replace('index.html');
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                window.location.replace('admin.html');
             } else {
                 errorEl.classList.add('visible');
                 passInp.value = '';
