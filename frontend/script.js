@@ -603,23 +603,26 @@
             if (successEl) successEl.classList.remove('visible');
             if (errorEl)   errorEl.classList.remove('visible');
 
-            var apiUrl = (window.MRF_API_URL || '') + '/api/contact';
-            var service = document.getElementById('selected-service');
+            var service       = document.getElementById('selected-service');
+            var formspreeUrl  = window.MRF_CMS && window.MRF_CMS.data && window.MRF_CMS.data.formspreeUrl;
+            var apiUrl        = formspreeUrl || ((window.MRF_API_URL || '') + '/api/contact');
+            var payload       = {
+                name:    nameInput.value.trim(),
+                email:   emailInput.value.trim(),
+                message: messageInput.value.trim(),
+                service: service ? service.textContent : ''
+            };
 
             fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name:    nameInput.value.trim(),
-                    email:   emailInput.value.trim(),
-                    message: messageInput.value.trim(),
-                    service: service ? service.textContent : ''
-                })
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body:    JSON.stringify(payload)
             })
             .then(function (res) { return res.json(); })
             .then(function (data) {
                 submitBtn.classList.remove('loading');
-                if (data.success) {
+                /* Formspree returns {ok:true}, backend returns {success:true} */
+                if (data.ok || data.success) {
                     if (successEl) successEl.classList.add('visible');
                     contactForm.reset();
                     [nameInput, emailInput, messageInput].forEach(function (inp) {
@@ -628,7 +631,7 @@
                 } else {
                     if (errorEl) {
                         var errSpan = errorEl.querySelector('span');
-                        if (errSpan) errSpan.textContent = data.message || 'Something went wrong.';
+                        if (errSpan) errSpan.textContent = (data.errors && data.errors[0] && data.errors[0].message) || data.message || 'Something went wrong.';
                         errorEl.classList.add('visible');
                     }
                 }

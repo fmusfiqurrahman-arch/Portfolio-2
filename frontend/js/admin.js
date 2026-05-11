@@ -13,6 +13,10 @@
     var ADMIN_USER  = 'admin';
     var ADMIN_PASS  = 'MRF@2024';
 
+    function getAdminPass() {
+        return localStorage.getItem('mrf_admin_pass') || ADMIN_PASS;
+    }
+
     var DEFAULT_PACKAGES = [
         {
             id: 'portrait',
@@ -132,7 +136,7 @@
     }
 
     function doLogin(user, pass) {
-        if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        if (user === ADMIN_USER && pass === getAdminPass()) {
             sessionStorage.setItem(SESSION_KEY, 'true');
             loginErr.classList.remove('visible');
             showApp();
@@ -188,7 +192,9 @@
             featured:     renderFeatured,
             packages:     renderPackages,
             testimonials: renderTestimonials,
-            contact:      renderContact
+            contact:      renderContact,
+            hero:         renderHero,
+            settings:     renderSettings
         };
 
         if (renderers[name]) {
@@ -330,6 +336,42 @@
         update();
     }
 
+    function makeImageUploader(currentUrl, onChange) {
+        var wrap     = el('div', 'adm-img-upload-wrap');
+        var urlInput = makeInput(currentUrl, 'Paste URL or upload below');
+        urlInput.addEventListener('input', function () { onChange(urlInput.value.trim()); });
+
+        var uid      = 'upl-' + Math.random().toString(36).substr(2, 6);
+        var fileInp  = document.createElement('input');
+        fileInp.type    = 'file';
+        fileInp.accept  = 'image/*';
+        fileInp.id      = uid;
+        fileInp.className = 'adm-file-input';
+
+        var uplBtn = el('label', 'adm-btn adm-btn--ghost adm-btn--sm adm-upload-btn');
+        uplBtn.htmlFor = uid;
+        uplBtn.innerHTML =
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 1 0 0 3 16.3"/></svg> Upload Image';
+
+        fileInp.addEventListener('change', function () {
+            var file = fileInp.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                urlInput.value = ev.target.result;
+                onChange(ev.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        var row = el('div', 'adm-upload-row');
+        row.appendChild(fileInp);
+        row.appendChild(uplBtn);
+        wrap.appendChild(urlInput);
+        wrap.appendChild(row);
+        return { wrap: wrap, input: urlInput };
+    }
+
     /* ─────────────────────────────────────────
        SECTION: ABOUT
     ───────────────────────────────────────── */
@@ -340,11 +382,14 @@
         card.innerHTML = '<h2 class="adm-section-title">About &amp; Profile</h2>';
 
         /* Photo */
-        var photoInput   = makeInput(d.photo, 'https://...');
-        var photoPreview = makeImagePreview(d.photo);
-        bindPreview(photoInput, photoPreview);
-        card.appendChild(field('Profile Photo URL', photoInput));
+        var photoPreview  = makeImagePreview(d.photo);
+        var photoUploader = makeImageUploader(d.photo || '', function (url) {
+            photoPreview.src = url;
+            photoPreview.classList.toggle('visible', !!url);
+        });
+        card.appendChild(field('Profile Photo', photoUploader.wrap));
         card.appendChild(photoPreview);
+        var photoInput = photoUploader.input;
 
         var hr1 = el('hr', 'adm-divider'); card.appendChild(hr1);
 
@@ -1115,6 +1160,202 @@
 
         contentArea.innerHTML = '';
         contentArea.appendChild(card);
+    }
+
+    /* ─────────────────────────────────────────
+       SECTION: HERO SLIDES
+    ───────────────────────────────────────── */
+    function renderHero() {
+        var d      = cmsData();
+        var slides = d.heroSlides || [{ image: '', position: 'center center' }, { image: '', position: 'center center' }, { image: '', position: 'center center' }];
+
+        var page = el('div');
+
+        var infoCard = el('div', 'adm-card');
+        infoCard.innerHTML = '<h2 class="adm-section-title">Hero Slides</h2><p style="color:var(--text-muted);font-size:.85rem;margin-bottom:0;">These 3 images rotate in your full-screen hero section. Upload photos or paste URLs. Recommended: landscape, min 1920×1080.</p>';
+        page.appendChild(infoCard);
+
+        var slideInputs = [];
+        slides.forEach(function (slide, i) {
+            var sCard = el('div', 'adm-card');
+            sCard.innerHTML = '<h3 class="adm-subsection-title">Slide ' + (i + 1) + '</h3>';
+
+            var prev    = makeImagePreview(slide.image);
+            var upl     = makeImageUploader(slide.image || '', function (url) {
+                prev.src = url;
+                prev.classList.toggle('visible', !!url);
+            });
+            sCard.appendChild(field('Image', upl.wrap));
+            sCard.appendChild(prev);
+
+            var posInp = makeInput(slide.position || 'center center', 'e.g. center 30%');
+            sCard.appendChild(field('Focus Position (background-position)', posInp));
+
+            slideInputs.push({ inp: upl.input, pos: posInp });
+            page.appendChild(sCard);
+        });
+
+        var saveBar = el('div', 'adm-save-bar');
+        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save Hero Slides');
+        saveBtn.type = 'button';
+        saveBtn.addEventListener('click', function () {
+            var data = cmsData();
+            data.heroSlides = slideInputs.map(function (s) {
+                return { image: s.inp.value.trim(), position: s.pos.value.trim() };
+            });
+            saveData(data);
+            showToast('Hero slides saved!', 'success');
+        });
+        saveBar.appendChild(saveBtn);
+        page.appendChild(saveBar);
+
+        contentArea.innerHTML = '';
+        contentArea.appendChild(page);
+    }
+
+    /* ─────────────────────────────────────────
+       SECTION: SETTINGS
+    ───────────────────────────────────────── */
+    function renderSettings() {
+        var d    = cmsData();
+        var page = el('div');
+
+        /* ── Password Change ── */
+        var passCard = el('div', 'adm-card');
+        passCard.innerHTML = '<h2 class="adm-section-title">Change Password</h2>';
+        var curInp  = makeInput('', 'Current password'); curInp.type = 'password';
+        var newInp  = makeInput('', 'New password');     newInp.type = 'password';
+        var conInp  = makeInput('', 'Confirm password'); conInp.type = 'password';
+        passCard.appendChild(field('Current Password', curInp));
+        passCard.appendChild(field('New Password', newInp));
+        passCard.appendChild(field('Confirm New Password', conInp));
+        var passSave = el('div', 'adm-save-bar');
+        var passBtn  = el('button', 'adm-btn adm-btn--primary', 'Update Password');
+        passBtn.type = 'button';
+        passBtn.addEventListener('click', function () {
+            if (curInp.value !== getAdminPass()) { showToast('Current password is incorrect', 'error'); return; }
+            if (newInp.value.length < 6)          { showToast('New password must be 6+ characters', 'error'); return; }
+            if (newInp.value !== conInp.value)    { showToast('Passwords do not match', 'error'); return; }
+            localStorage.setItem('mrf_admin_pass', newInp.value);
+            showToast('Password updated!', 'success');
+            curInp.value = newInp.value = conInp.value = '';
+        });
+        passSave.appendChild(passBtn);
+        passCard.appendChild(passSave);
+        page.appendChild(passCard);
+
+        /* ── SEO Settings ── */
+        var seoCard = el('div', 'adm-card');
+        seoCard.innerHTML = '<h2 class="adm-section-title">SEO &amp; Social Sharing</h2>';
+        var seo         = d.seo || {};
+        var seoTitle    = makeInput(seo.title || '', 'Page title');
+        var seoDesc     = makeTextarea(seo.description || '', 3); seoDesc.placeholder = 'Meta description (recommended: 150–160 characters)';
+        var seoImg      = makeInput(seo.ogImage || '', 'https://... (used for WhatsApp/Facebook previews)');
+        seoCard.appendChild(field('Page Title', seoTitle));
+        seoCard.appendChild(field('Meta Description', seoDesc));
+        seoCard.appendChild(field('Social Preview Image URL', seoImg));
+        var seoSave = el('div', 'adm-save-bar');
+        var seoBtn  = el('button', 'adm-btn adm-btn--primary', 'Save SEO Settings');
+        seoBtn.type = 'button';
+        seoBtn.addEventListener('click', function () {
+            var data = cmsData();
+            data.seo = { title: seoTitle.value.trim(), description: seoDesc.value.trim(), ogImage: seoImg.value.trim() };
+            saveData(data);
+            showToast('SEO settings saved!', 'success');
+        });
+        seoSave.appendChild(seoBtn);
+        seoCard.appendChild(seoSave);
+        page.appendChild(seoCard);
+
+        /* ── Formspree ── */
+        var fsCard = el('div', 'adm-card');
+        fsCard.innerHTML = '<h2 class="adm-section-title">Contact Form (Formspree)</h2><p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1rem;">Sign up at <a href="https://formspree.io" target="_blank" rel="noopener" style="color:var(--gold)">formspree.io</a>, create a form, and paste your endpoint URL below. Example: <code>https://formspree.io/f/xabc1234</code></p>';
+        var fsInp = makeInput(d.formspreeUrl || '', 'https://formspree.io/f/your-form-id');
+        fsCard.appendChild(field('Formspree Endpoint URL', fsInp));
+        var fsSave = el('div', 'adm-save-bar');
+        var fsBtn  = el('button', 'adm-btn adm-btn--primary', 'Save Formspree URL');
+        fsBtn.type = 'button';
+        fsBtn.addEventListener('click', function () {
+            var data = cmsData();
+            data.formspreeUrl = fsInp.value.trim();
+            saveData(data);
+            showToast('Formspree URL saved!', 'success');
+        });
+        fsSave.appendChild(fsBtn);
+        fsCard.appendChild(fsSave);
+        page.appendChild(fsCard);
+
+        /* ── Calendly ── */
+        var calCard = el('div', 'adm-card');
+        calCard.innerHTML = '<h2 class="adm-section-title">Calendly Booking</h2><p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1rem;">Paste your Calendly URL to enable direct booking from your portfolio. Example: <code>https://calendly.com/yourname</code></p>';
+        var calInp = makeInput(d.calendlyUrl || '', 'https://calendly.com/yourname');
+        calCard.appendChild(field('Your Calendly URL', calInp));
+        var calSave = el('div', 'adm-save-bar');
+        var calBtn  = el('button', 'adm-btn adm-btn--primary', 'Save Calendly URL');
+        calBtn.type = 'button';
+        calBtn.addEventListener('click', function () {
+            var data = cmsData();
+            data.calendlyUrl = calInp.value.trim();
+            saveData(data);
+            showToast('Calendly URL saved!', 'success');
+        });
+        calSave.appendChild(calBtn);
+        calCard.appendChild(calSave);
+        page.appendChild(calCard);
+
+        /* ── Export / Import ── */
+        var dataCard = el('div', 'adm-card');
+        dataCard.innerHTML = '<h2 class="adm-section-title">Export &amp; Import Data</h2><p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1.5rem;">Export saves all your content to a JSON file. Import restores from a previously exported file. <strong>Warning:</strong> importing will overwrite all current content.</p>';
+        var dataRow = el('div', 'adm-save-bar');
+
+        var expBtn = el('button', 'adm-btn adm-btn--primary', 'Export Data');
+        expBtn.type = 'button';
+        expBtn.addEventListener('click', function () {
+            var raw  = localStorage.getItem('mrf_cms') || '{}';
+            var blob = new Blob([raw], { type: 'application/json' });
+            var url  = URL.createObjectURL(blob);
+            var a    = document.createElement('a');
+            a.href     = url;
+            a.download = 'mrf-cms-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Data exported!', 'success');
+        });
+
+        var impFileInp  = document.createElement('input');
+        impFileInp.type = 'file';
+        impFileInp.accept = '.json,application/json';
+        impFileInp.className = 'adm-file-input';
+        impFileInp.id = 'import-file';
+
+        var impBtn   = el('label', 'adm-btn adm-btn--ghost', 'Import Data');
+        impBtn.htmlFor = 'import-file';
+
+        impFileInp.addEventListener('change', function () {
+            var file = impFileInp.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                try {
+                    var parsed = JSON.parse(ev.target.result);
+                    localStorage.setItem('mrf_cms', JSON.stringify(parsed));
+                    showToast('Data imported! Reloading…', 'success');
+                    setTimeout(function () { window.location.reload(); }, 1200);
+                } catch (err) {
+                    showToast('Invalid JSON file', 'error');
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        dataRow.appendChild(expBtn);
+        dataRow.appendChild(impFileInp);
+        dataRow.appendChild(impBtn);
+        dataCard.appendChild(dataRow);
+        page.appendChild(dataCard);
+
+        contentArea.innerHTML = '';
+        contentArea.appendChild(page);
     }
 
     /* ─────────────────────────────────────────

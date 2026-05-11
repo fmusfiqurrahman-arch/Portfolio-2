@@ -49,7 +49,19 @@
         portfolioAlbums: null,
         testimonials:    null,
         packages:        null,
-        favorites:       []
+        favorites:       [],
+        heroSlides: [
+            { image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1920&q=85', position: 'center 30%' },
+            { image: 'https://images.unsplash.com/photo-1606216794079-c8f53a0f7b9e?w=1920&q=85', position: 'center 20%' },
+            { image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1920&q=85', position: 'center 25%' }
+        ],
+        seo: {
+            title:       'Musfiqur Rahman Fahim — Wedding & Portrait Photographer',
+            description: 'Cinematic. Emotional. Story-driven. Based in Dhaka, Bangladesh.',
+            ogImage:     'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1200&q=85'
+        },
+        calendlyUrl:  '',
+        formspreeUrl: ''
     };
 
     /* Deep-merge saved data over defaults */
@@ -224,6 +236,47 @@
                         locationEls[loc].textContent = d.contact.location;
                     }
                 }
+            }
+        }
+
+        /* Hero slides */
+        if (d.heroSlides) {
+            var heroImgs = document.querySelectorAll('.hero-image');
+            for (var hi = 0; hi < heroImgs.length && hi < d.heroSlides.length; hi++) {
+                if (d.heroSlides[hi].image) heroImgs[hi].style.backgroundImage = "url('" + d.heroSlides[hi].image + "')";
+                if (d.heroSlides[hi].position) heroImgs[hi].style.backgroundPosition = d.heroSlides[hi].position;
+            }
+        }
+
+        /* SEO */
+        if (d.seo) {
+            if (d.seo.title) document.title = d.seo.title;
+            var seoDesc = document.querySelector('meta[name="description"]');
+            if (seoDesc && d.seo.description) seoDesc.setAttribute('content', d.seo.description);
+            if (d.seo.ogImage) {
+                var ogImg = document.querySelector('meta[property="og:image"]');
+                if (ogImg) ogImg.setAttribute('content', d.seo.ogImage);
+                var twImg = document.querySelector('meta[name="twitter:image"]');
+                if (twImg) twImg.setAttribute('content', d.seo.ogImage);
+            }
+        }
+
+        /* Calendly embed */
+        if (d.calendlyUrl) {
+            var calEl = document.querySelector('.calendly-placeholder');
+            if (calEl) {
+                calEl.innerHTML =
+                    '<div class="calendly-inline-widget" data-url="' + d.calendlyUrl + '" style="min-width:320px;height:630px;"></div>' +
+                    '<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async><\/script>';
+            }
+        }
+
+        /* WhatsApp button phone */
+        if (d.contact && d.contact.phone) {
+            var waBtn = document.getElementById('whatsapp-float');
+            if (waBtn) {
+                var waDigits = d.contact.phone.replace(/[^0-9+]/g, '');
+                waBtn.href = 'https://wa.me/' + waDigits;
             }
         }
     }
