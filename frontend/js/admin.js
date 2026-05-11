@@ -1,1377 +1,341 @@
-/* ===========================
-   MRF Photography — admin.js
-   Admin Panel Logic
-   =========================== */
+// MRF Admin · interactions
 
-(function () {
-    'use strict';
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
-    /* ─────────────────────────────────────────
-       CONSTANTS
-    ───────────────────────────────────────── */
-    var SESSION_KEY = 'mrf_admin';
-    var ADMIN_USER  = 'admin';
-    var ADMIN_PASS  = 'MRF@2024';
+// ─── Section switching ───
+$$('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const name = btn.dataset.section;
+    if (!name) return;
+    $$('.nav-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    $$('.section').forEach(s => s.classList.remove('active'));
+    const target = $(`.section[data-name="${name}"]`);
+    if (target) target.classList.add('active');
+    const crumb = $('#crumb');
+    if (crumb) crumb.textContent = btn.textContent.trim().replace(/\d+$/, '').trim();
+    $('#content').scrollTop = 0;
+  });
+});
 
-    function getAdminPass() {
-        return localStorage.getItem('mrf_admin_pass') || ADMIN_PASS;
-    }
+// ─── Clock ───
+function updateClock() {
+  const now = new Date();
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const date = $('#top-date');
+  const time = $('#top-time');
+  if (date) date.textContent = `${days[now.getDay()]} · ${now.getDate()} ${months[now.getMonth()]}`;
+  if (time) {
+    let h = now.getHours(); const m = now.getMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    time.textContent = `${h}:${String(m).padStart(2, '0')} ${ampm}`;
+  }
+}
+updateClock();
+setInterval(updateClock, 30000);
 
-    var DEFAULT_PACKAGES = [
-        {
-            id: 'portrait',
-            name: 'Portrait Photography',
-            desc: 'Professional headshots, personal branding, and portrait sessions that capture your authentic self.',
-            price: '500',
-            duration: '2-hour session',
-            features: ['2-hour session', '50+ edited photos', 'Online gallery', 'Print rights included', 'Delivered in 2 weeks'],
-            visible: true
-        },
-        {
-            id: 'wedding',
-            name: 'Wedding Photography',
-            desc: 'Complete wedding day coverage with cinematic storytelling and timeless elegance.',
-            price: '3,500',
-            duration: '8-hour coverage',
-            features: ['8-hour coverage', '500+ edited photos', 'Engagement session', 'Custom album included', 'Second photographer', 'Delivered in 6 weeks'],
-            visible: true
-        },
-        {
-            id: 'commercial',
-            name: 'Commercial Photography',
-            desc: 'Product photography, brand campaigns, and corporate headshots for businesses.',
-            price: '1,200',
-            duration: 'Half-day session',
-            features: ['Half-day session', '100+ edited photos', 'Commercial usage rights', 'Brand guideline adherence', 'Delivered in 3 weeks'],
-            visible: true
-        },
-        {
-            id: 'editorial',
-            name: 'Editorial Photography',
-            desc: 'Magazine spreads, fashion editorials, and artistic conceptual photography.',
-            price: '2,000',
-            duration: 'Full-day session',
-            features: ['Full-day session', 'Concept development', '200+ edited photos', 'Location scouting', 'Styling consultation', 'Delivered in 4 weeks'],
-            visible: true
-        },
-        {
-            id: 'custom',
-            name: 'Custom Package',
-            desc: 'Something unique in mind? Let\'s build the perfect shoot around your vision.',
-            price: 'Custom',
-            duration: 'Fully bespoke',
-            features: ['Multi-day or destination shoots', 'Commercial campaigns', 'Editorial & magazine work', 'Flexible timeline', 'Custom deliverables'],
-            visible: true
-        }
-    ];
+// ─── Toast ───
+function toast(title, sub) {
+  const t = $('#toast');
+  $('#toast-msg').innerHTML = `<b>${title}</b><em>${sub || ''}</em>`;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove('show'), 2800);
+}
 
-    var DEFAULT_TESTIMONIALS = [
-        {
-            name: 'Nadia & Rafiq Hossain',
-            role: 'Wedding — Dhaka, December 2024',
-            text: 'It rained for three hours during our wedding in Dhaka. I was devastated. Fahim pulled me aside and said — trust me, rain makes the best light. When I saw the photos, I cried. Every single rainy frame looked like a scene from a film. Our guests still ask us who our photographer was.',
-            photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80',
-            visible: true
-        },
-        {
-            name: 'Sadia & Imran Khan',
-            role: 'Wedding — Chittagong, August 2023',
-            text: 'There is one photo Fahim took where my husband doesn\'t know I\'m looking at him. I\'m watching him from across the room and the way my face looks — I didn\'t know I could look at someone like that. I\'ve printed it. It\'s hanging in our home. Nothing else needs to be said.',
-            photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
-            visible: true
-        },
-        {
-            name: 'Arif Chowdhury',
-            role: 'Brand Portrait Session — 2023',
-            text: 'I booked Fahim for a brand portrait session expecting standard headshots. What I received were photographs that looked like they belonged in Vogue. My LinkedIn profile picture has received more comments in two months than my previous one did in four years. He doesn\'t just take photos — he understands light in a way most photographers never will.',
-            photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80',
-            visible: true
-        }
-    ];
+// ─── Save buttons ───
+$$('[data-save]').forEach(b => b.addEventListener('click', () => toast('Saved', 'All changes captured · just now')));
 
-    var DEFAULT_EXPERIENCE = [
-        { year: '2015', title: 'Studio Launch',   desc: 'Founded MRF Photography, Dhaka' },
-        { year: '2018', title: 'Nat. Geographic', desc: 'First international editorial feature' },
-        { year: '2020', title: 'First Book',      desc: 'Published visual narrative collection' },
-        { year: '2022', title: 'Photo Award',     desc: 'Best Wedding Photographer — BD' },
-        { year: '2024', title: 'Vogue Feature',   desc: 'Editorial spread — Asia edition' }
-    ];
+// ─── Toggles ───
+$$('[data-toggle]').forEach(t => {
+  t.addEventListener('click', () => {
+    t.classList.toggle('on');
+    toast('Updated', 'Preference saved');
+  });
+});
 
-    /* ─────────────────────────────────────────
-       DOM REFS
-    ───────────────────────────────────────── */
-    var loginScreen = document.getElementById('adm-login-screen');
-    var adminApp    = document.getElementById('adm-app');
-    var loginErr    = document.getElementById('adm-login-error');
-    var userInput   = document.getElementById('adm-username');
-    var passInput   = document.getElementById('adm-password');
-    var loginBtn    = document.getElementById('adm-login-btn');
-    var logoutBtn   = document.getElementById('adm-logout-btn');
-    var navEl       = document.getElementById('adm-nav');
-    var contentArea = document.getElementById('adm-content-area');
-    var toastEl     = document.getElementById('adm-toast');
+// ─── Album drawer ───
+window.openDrawer = () => {
+  const d = $('#album-drawer');
+  d.classList.add('open');
+  setTimeout(() => d.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+};
+window.closeDrawer = () => $('#album-drawer').classList.remove('open');
 
-    var currentSection = 'about';
-
-    /* ─────────────────────────────────────────
-       AUTH
-    ───────────────────────────────────────── */
-    function checkAuth() {
-        if (sessionStorage.getItem(SESSION_KEY) === 'true') {
-            showApp();
-        } else {
-            showLogin();
-        }
-    }
-
-    function showLogin() {
-        loginScreen.style.display = 'flex';
-        adminApp.classList.remove('visible');
-    }
-
-    function showApp() {
-        loginScreen.style.display = 'none';
-        adminApp.classList.add('visible');
-        showSection(currentSection);
-    }
-
-    function doLogin(user, pass) {
-        if (user === ADMIN_USER && pass === getAdminPass()) {
-            sessionStorage.setItem(SESSION_KEY, 'true');
-            loginErr.classList.remove('visible');
-            showApp();
-        } else {
-            loginErr.classList.add('visible');
-            passInput.value = '';
-            passInput.focus();
-        }
-    }
-
-    function doLogout() {
-        sessionStorage.removeItem(SESSION_KEY);
-        showLogin();
-    }
-
-    loginBtn.addEventListener('click', function () {
-        doLogin(userInput.value.trim(), passInput.value);
+// ─── Album filters ───
+$$('.filter-pill').forEach(p => {
+  p.addEventListener('click', () => {
+    $$('.filter-pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    const f = p.dataset.filter;
+    $$('#album-grid .album').forEach(a => {
+      a.style.display = (f === 'all' || a.dataset.cat === f) ? '' : 'none';
     });
+  });
+});
 
-    passInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') doLogin(userInput.value.trim(), passInput.value);
-    });
-
-    userInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') passInput.focus();
-    });
-
-    logoutBtn.addEventListener('click', doLogout);
-
-    /* ─────────────────────────────────────────
-       NAVIGATION
-    ───────────────────────────────────────── */
-    navEl.addEventListener('click', function (e) {
-        var btn = e.target.closest('[data-section]');
-        if (!btn) return;
-        var section = btn.getAttribute('data-section');
-        showSection(section);
-    });
-
-    function showSection(name) {
-        currentSection = name;
-        /* Update active nav */
-        navEl.querySelectorAll('.adm-nav-item').forEach(function (item) {
-            item.classList.toggle('active', item.getAttribute('data-section') === name);
-        });
-
-        /* Render section */
-        var renderers = {
-            about:        renderAbout,
-            gear:         renderGear,
-            experience:   renderExperience,
-            albums:       renderAlbums,
-            featured:     renderFeatured,
-            packages:     renderPackages,
-            testimonials: renderTestimonials,
-            contact:      renderContact,
-            hero:         renderHero,
-            settings:     renderSettings
-        };
-
-        if (renderers[name]) {
-            renderers[name]();
-        } else {
-            contentArea.innerHTML = '<div class="adm-card"><p>Section not found.</p></div>';
-        }
+// ─── Album drag reorder ───
+let dragSrc = null;
+$$('#album-grid .album').forEach(a => {
+  a.addEventListener('dragstart', (e) => {
+    dragSrc = a; a.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  a.addEventListener('dragend', () => {
+    $$('.album').forEach(x => x.classList.remove('dragging', 'drag-over'));
+    dragSrc = null;
+  });
+  a.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (dragSrc && dragSrc !== a) a.classList.add('drag-over');
+  });
+  a.addEventListener('dragleave', () => a.classList.remove('drag-over'));
+  a.addEventListener('drop', (e) => {
+    e.preventDefault();
+    a.classList.remove('drag-over');
+    if (dragSrc && dragSrc !== a) {
+      const grid = $('#album-grid');
+      const rect = a.getBoundingClientRect();
+      const before = (e.clientX - rect.left) < rect.width / 2;
+      grid.insertBefore(dragSrc, before ? a : a.nextSibling);
+      toast('Reordered', 'Album order updated');
     }
+  });
+});
 
-    /* ─────────────────────────────────────────
-       TOAST
-    ───────────────────────────────────────── */
-    var toastTimer;
-    function showToast(msg, type) {
-        clearTimeout(toastTimer);
-        toastEl.textContent = msg;
-        toastEl.className   = 'adm-toast adm-toast--' + (type || 'success');
-        toastEl.classList.add('visible');
-        toastTimer = setTimeout(function () {
-            toastEl.classList.remove('visible');
-        }, 3000);
+// ─── New album ───
+$('#new-album-card').addEventListener('click', () => toast('Begin a new album', 'Opening composer…'));
+$('#new-album-btn').addEventListener('click', () => toast('Begin a new album', 'Opening composer…'));
+
+// ─── Drop zones ───
+['album-drop', 'feat-drop'].forEach(id => {
+  const el = $('#' + id); if (!el) return;
+  ['dragenter', 'dragover'].forEach(ev => el.addEventListener(ev, (e) => { e.preventDefault(); el.classList.add('active'); }));
+  ['dragleave', 'drop'].forEach(ev => el.addEventListener(ev, (e) => { e.preventDefault(); el.classList.remove('active'); }));
+  el.addEventListener('drop', (e) => {
+    const n = e.dataTransfer?.files?.length || 1;
+    toast(`Added ${n} photograph${n > 1 ? 's' : ''}`, 'Uploading in the background');
+  });
+  el.addEventListener('click', () => toast('Browse files', 'File picker would open here'));
+});
+
+// ─── Photo remove ───
+document.addEventListener('click', (e) => {
+  const x = e.target.closest('.photo .x');
+  if (x) {
+    e.stopPropagation();
+    x.closest('.photo').remove();
+    toast('Removed', 'Photograph deleted from album');
+  }
+});
+
+// ─── Packages: expand / collapse ───
+window.togglePkg = (head) => head.parentElement.classList.toggle('open');
+
+// ─── Includes: add / remove ───
+document.addEventListener('click', (e) => {
+  const add = e.target.closest('.add-include');
+  if (add) {
+    const list = add.previousElementSibling;
+    const row = document.createElement('div');
+    row.className = 'includes-row';
+    row.innerHTML = `<span class="dot"></span><input placeholder="New inclusion…"><button>×</button>`;
+    list.appendChild(row);
+    row.querySelector('input').focus();
+  }
+  const rm = e.target.closest('.includes-row button');
+  if (rm) rm.parentElement.remove();
+});
+
+// ─── Gear pills: add ───
+$$('.gear-pill.add input').forEach(inp => {
+  inp.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && inp.value.trim()) {
+      const pill = document.createElement('span');
+      pill.className = 'gear-pill';
+      pill.innerHTML = `${inp.value.trim()} <button>×</button>`;
+      inp.parentElement.insertAdjacentElement('beforebegin', pill);
+      inp.value = '';
+      toast('Added', 'Gear item added to inventory');
     }
-
-    /* ─────────────────────────────────────────
-       HELPERS
-    ───────────────────────────────────────── */
-    function cmsData() { return window.MRF_CMS.data; }
-
-    function saveData(updatedData) {
-        window.MRF_CMS.data = updatedData;
-        window.MRF_CMS.save(updatedData);
-    }
-
-    function el(tag, cls, html) {
-        var e = document.createElement(tag);
-        if (cls) e.className = cls;
-        if (html !== undefined) e.innerHTML = html;
-        return e;
-    }
-
-    function field(labelText, inputEl) {
-        var wrap = el('div', 'adm-field');
-        var lbl  = el('label');
-        lbl.textContent = labelText;
-        wrap.appendChild(lbl);
-        wrap.appendChild(inputEl);
-        return wrap;
-    }
-
-    function makeInput(value, placeholder) {
-        var inp = el('input');
-        inp.className   = 'adm-input';
-        inp.type        = 'text';
-        inp.value       = value || '';
-        inp.placeholder = placeholder || '';
-        return inp;
-    }
-
-    function makeTextarea(value, rows) {
-        var ta       = el('textarea');
-        ta.className = 'adm-textarea';
-        ta.value     = value || '';
-        ta.rows      = rows || 4;
-        return ta;
-    }
-
-    function makeSelect(options, selected) {
-        var sel = el('select', 'adm-select');
-        options.forEach(function (opt) {
-            var o = el('option');
-            o.value       = opt.value;
-            o.textContent = opt.label;
-            if (opt.value === selected) o.selected = true;
-            sel.appendChild(o);
-        });
-        return sel;
-    }
-
-    function makeToggle(checked, labelText) {
-        var wrap = el('div', 'adm-toggle-wrap');
-        var lbl  = document.createElement('label');
-        lbl.className = 'adm-toggle';
-        var inp = document.createElement('input');
-        inp.type    = 'checkbox';
-        inp.checked = !!checked;
-        var slider = el('span', 'adm-toggle-slider');
-        lbl.appendChild(inp);
-        lbl.appendChild(slider);
-        wrap.appendChild(lbl);
-        if (labelText) {
-            var txt = el('span', 'adm-toggle-label', labelText);
-            wrap.appendChild(txt);
-        }
-        return { wrap: wrap, input: inp };
-    }
-
-    function makePillList(items, isGold, onRemove) {
-        var list = el('div', 'adm-pill-list');
-        function rebuildPills(arr) {
-            list.innerHTML = '';
-            arr.forEach(function (item, idx) {
-                var pill   = el('span', 'adm-pill' + (isGold ? ' adm-pill-gold' : ''));
-                var txt    = document.createTextNode(item);
-                var btn    = el('button', 'adm-pill-remove');
-                btn.type        = 'button';
-                btn.textContent = '×';
-                btn.title       = 'Remove';
-                btn.addEventListener('click', function () { onRemove(idx); });
-                pill.appendChild(txt);
-                pill.appendChild(btn);
-                list.appendChild(pill);
-            });
-        }
-        rebuildPills(items);
-        return list;
-    }
-
-    function makeImagePreview(src) {
-        var img = el('img', 'adm-img-preview');
-        img.alt = 'Preview';
-        if (src) {
-            img.src = src;
-            img.classList.add('visible');
-        }
-        return img;
-    }
-
-    function bindPreview(inputEl, imgEl) {
-        function update() {
-            var val = inputEl.value.trim();
-            if (val) {
-                imgEl.src = val;
-                imgEl.classList.add('visible');
-            } else {
-                imgEl.classList.remove('visible');
-            }
-        }
-        inputEl.addEventListener('input', update);
-        update();
-    }
-
-    function makeImageUploader(currentUrl, onChange) {
-        var wrap     = el('div', 'adm-img-upload-wrap');
-        var urlInput = makeInput(currentUrl, 'Paste URL or upload below');
-        urlInput.addEventListener('input', function () { onChange(urlInput.value.trim()); });
-
-        var uid      = 'upl-' + Math.random().toString(36).substr(2, 6);
-        var fileInp  = document.createElement('input');
-        fileInp.type    = 'file';
-        fileInp.accept  = 'image/*';
-        fileInp.id      = uid;
-        fileInp.className = 'adm-file-input';
-
-        var uplBtn = el('label', 'adm-btn adm-btn--ghost adm-btn--sm adm-upload-btn');
-        uplBtn.htmlFor = uid;
-        uplBtn.innerHTML =
-            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 1 0 0 3 16.3"/></svg> Upload Image';
-
-        fileInp.addEventListener('change', function () {
-            var file = fileInp.files[0];
-            if (!file) return;
-            var reader = new FileReader();
-            reader.onload = function (ev) {
-                urlInput.value = ev.target.result;
-                onChange(ev.target.result);
-            };
-            reader.readAsDataURL(file);
-        });
-
-        var row = el('div', 'adm-upload-row');
-        row.appendChild(fileInp);
-        row.appendChild(uplBtn);
-        wrap.appendChild(urlInput);
-        wrap.appendChild(row);
-        return { wrap: wrap, input: urlInput };
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: ABOUT
-    ───────────────────────────────────────── */
-    function renderAbout() {
-        var d = cmsData().about || {};
-
-        var card = el('div', 'adm-card');
-        card.innerHTML = '<h2 class="adm-section-title">About &amp; Profile</h2>';
-
-        /* Photo */
-        var photoPreview  = makeImagePreview(d.photo);
-        var photoUploader = makeImageUploader(d.photo || '', function (url) {
-            photoPreview.src = url;
-            photoPreview.classList.toggle('visible', !!url);
-        });
-        card.appendChild(field('Profile Photo', photoUploader.wrap));
-        card.appendChild(photoPreview);
-        var photoInput = photoUploader.input;
-
-        var hr1 = el('hr', 'adm-divider'); card.appendChild(hr1);
-
-        /* Heading */
-        var headingInput = makeTextarea(d.heading ? d.heading.replace(/<br\s*\/?>/gi, '\n') : '', 2);
-        headingInput.placeholder = 'You Won\'t Remember\nthe Flowers.';
-        card.appendChild(field('Section Heading (use newline for <br>)', headingInput));
-
-        /* Lead */
-        var leadInput = makeTextarea(d.lead, 3);
-        card.appendChild(field('Lead Paragraph', leadInput));
-
-        /* Bio */
-        var bioInput = makeTextarea(d.bio, 4);
-        card.appendChild(field('Bio Paragraph', bioInput));
-
-        /* Quote */
-        var quoteInput = makeInput(d.quote, '"I don\'t photograph weddings..."');
-        card.appendChild(field('Pull Quote', quoteInput));
-
-        var hr2 = el('hr', 'adm-divider'); card.appendChild(hr2);
-
-        /* Stats */
-        var statsTitle = el('div', 'adm-subsection-title', 'Stats');
-        card.appendChild(statsTitle);
-
-        var stats = d.stats || [{number:'500+',label:'Sessions'},{number:'10+',label:'Years'},{number:'50+',label:'Awards'}];
-        var statInputs = [];
-        stats.forEach(function (stat, idx) {
-            var row  = el('div', 'adm-stats-row');
-            var numF = el('div', 'adm-field');
-            var numL = el('label'); numL.textContent = 'Stat ' + (idx+1) + ' Number';
-            var numI = makeInput(stat.number, '500+');
-            numF.appendChild(numL); numF.appendChild(numI);
-
-            var lblF = el('div', 'adm-field');
-            var lblL = el('label'); lblL.textContent = 'Label';
-            var lblI = makeInput(stat.label, 'Sessions');
-            lblF.appendChild(lblL); lblF.appendChild(lblI);
-
-            row.appendChild(numF);
-            row.appendChild(lblF);
-            card.appendChild(row);
-            statInputs.push({ number: numI, label: lblI });
-        });
-
-        /* Save */
-        var saveBar = el('div', 'adm-save-bar');
-        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save About');
-        saveBtn.type = 'button';
-        saveBtn.addEventListener('click', function () {
-            var updatedStats = statInputs.map(function (s) {
-                return { number: s.number.value.trim(), label: s.label.value.trim() };
-            });
-            var data = cmsData();
-            data.about = {
-                photo:   photoInput.value.trim(),
-                heading: headingInput.value.replace(/\n/g, '<br>').trim(),
-                lead:    leadInput.value.trim(),
-                bio:     bioInput.value.trim(),
-                quote:   quoteInput.value.trim(),
-                stats:   updatedStats
-            };
-            saveData(data);
-            showToast('About section saved!', 'success');
-        });
-        saveBar.appendChild(saveBtn);
-        card.appendChild(saveBar);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(card);
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: GEAR
-    ───────────────────────────────────────── */
-    function renderGear() {
-        var d = cmsData().gear || {};
-
-        var groups = [
-            { key: 'camera',   label: 'Camera / Equipment', isGold: true  },
-            { key: 'editing',  label: 'Editing Software',   isGold: false },
-            { key: 'workflow', label: 'Workflow Tools',      isGold: false }
-        ];
-
-        var gearState = {
-            camera:   (d.camera   || ['Canon EOS R5','50mm f/1.2','85mm f/1.4','24-70mm f/2.8']).slice(),
-            editing:  (d.editing  || ['Lightroom','Photoshop','Capture One','DaVinci Resolve']).slice(),
-            workflow: (d.workflow || ['Notion','Calendly','WeTransfer','Google Drive']).slice()
-        };
-
-        var card = el('div', 'adm-card');
-        card.innerHTML = '<h2 class="adm-section-title">Gear &amp; Tools</h2>';
-
-        groups.forEach(function (grp) {
-            var section = el('div');
-
-            var title = el('div', 'adm-subsection-title', grp.label);
-            section.appendChild(title);
-
-            var pillList = makePillList(gearState[grp.key], grp.isGold, function (idx) {
-                gearState[grp.key].splice(idx, 1);
-                refreshPills();
-            });
-            section.appendChild(pillList);
-
-            function refreshPills() {
-                var newList = makePillList(gearState[grp.key], grp.isGold, function (idx) {
-                    gearState[grp.key].splice(idx, 1);
-                    refreshPills();
-                });
-                pillList.replaceWith(newList);
-                pillList = newList;
-            }
-
-            var addRow  = el('div', 'adm-add-row');
-            var addInp  = makeInput('', 'New item...');
-            var addBtn  = el('button', 'adm-btn adm-btn--ghost adm-btn--sm', '+ Add');
-            addBtn.type = 'button';
-            addBtn.addEventListener('click', function () {
-                var val = addInp.value.trim();
-                if (!val) return;
-                gearState[grp.key].push(val);
-                addInp.value = '';
-                refreshPills();
-            });
-            addInp.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') { e.preventDefault(); addBtn.click(); }
-            });
-            addRow.appendChild(addInp);
-            addRow.appendChild(addBtn);
-            section.appendChild(addRow);
-
-            var hr = el('hr', 'adm-divider');
-            section.appendChild(hr);
-
-            card.appendChild(section);
-        });
-
-        var saveBar = el('div', 'adm-save-bar');
-        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save Gear');
-        saveBtn.type = 'button';
-        saveBtn.addEventListener('click', function () {
-            var data  = cmsData();
-            data.gear = {
-                camera:   gearState.camera.slice(),
-                editing:  gearState.editing.slice(),
-                workflow: gearState.workflow.slice()
-            };
-            saveData(data);
-            showToast('Gear & Tools saved!', 'success');
-        });
-        saveBar.appendChild(saveBtn);
-        card.appendChild(saveBar);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(card);
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: EXPERIENCE
-    ───────────────────────────────────────── */
-    function renderExperience() {
-        var d = cmsData();
-        var expItems = (d.experience || DEFAULT_EXPERIENCE).map(function (e) {
-            return { year: e.year, title: e.title, desc: e.desc };
-        });
-
-        var card = el('div', 'adm-card');
-        card.innerHTML = '<h2 class="adm-section-title">Experience</h2>';
-
-        var actionsRow = el('div', 'adm-actions-row');
-        var addBtn = el('button', 'adm-btn adm-btn--ghost adm-btn--sm', '+ Add New Entry');
-        addBtn.type = 'button';
-        actionsRow.appendChild(addBtn);
-        card.appendChild(actionsRow);
-
-        var listEl = el('div', 'adm-exp-list');
-        card.appendChild(listEl);
-
-        function buildList() {
-            listEl.innerHTML = '';
-            expItems.forEach(function (item, idx) {
-                var itemEl = el('div', 'adm-exp-item');
-
-                /* Delete button */
-                var delBtn = el('button', 'adm-btn adm-btn--danger adm-btn--sm adm-exp-delete', '×');
-                delBtn.type  = 'button';
-                delBtn.title = 'Delete entry';
-                delBtn.addEventListener('click', function () {
-                    if (confirm('Delete this entry?')) {
-                        expItems.splice(idx, 1);
-                        buildList();
-                    }
-                });
-                itemEl.appendChild(delBtn);
-
-                /* Year + Title row */
-                var fieldsRow = el('div', 'adm-exp-fields');
-                var yearInp  = makeInput(item.year, '2015');
-                var titleInp = makeInput(item.title, 'Studio Launch');
-                yearInp.addEventListener('input',  function () { item.year  = yearInp.value;  });
-                titleInp.addEventListener('input', function () { item.title = titleInp.value; });
-                fieldsRow.appendChild(field('Year', yearInp));
-                fieldsRow.appendChild(field('Title', titleInp));
-                itemEl.appendChild(fieldsRow);
-
-                /* Description */
-                var descField = el('div', 'adm-field');
-                var descLbl   = el('label'); descLbl.textContent = 'Description';
-                var descTa    = makeTextarea(item.desc, 2);
-                descTa.addEventListener('input', function () { item.desc = descTa.value; });
-                descField.appendChild(descLbl);
-                descField.appendChild(descTa);
-                itemEl.appendChild(descField);
-
-                listEl.appendChild(itemEl);
-            });
-        }
-
-        buildList();
-
-        addBtn.addEventListener('click', function () {
-            expItems.push({ year: '', title: '', desc: '' });
-            buildList();
-            listEl.lastElementChild.querySelector('.adm-input').focus();
-        });
-
-        var saveBar = el('div', 'adm-save-bar');
-        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save Experience');
-        saveBtn.type = 'button';
-        saveBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.experience = expItems.map(function (e) {
-                return { year: e.year.trim(), title: e.title.trim(), desc: e.desc.trim() };
-            });
-            saveData(data);
-            showToast('Experience saved!', 'success');
-        });
-        saveBar.appendChild(saveBtn);
-        card.appendChild(saveBar);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(card);
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: ALBUMS
-    ───────────────────────────────────────── */
-    function renderAlbums() {
-        var d = cmsData();
-
-        /* Load albums — use saved or fall through to hardcoded defaults in window */
-        var albums;
-        if (d.portfolioAlbums) {
-            albums = JSON.parse(JSON.stringify(d.portfolioAlbums));
-        } else if (typeof PORTFOLIO_ALBUMS !== 'undefined') {
-            albums = JSON.parse(JSON.stringify(PORTFOLIO_ALBUMS));
-        } else {
-            albums = [];
-        }
-
-        var card = el('div', 'adm-card');
-        card.innerHTML = '<h2 class="adm-section-title">Portfolio Albums</h2>';
-
-        var actionsRow = el('div', 'adm-actions-row');
-        var addBtn = el('button', 'adm-btn adm-btn--ghost', '+ Add New Album');
-        addBtn.type = 'button';
-        actionsRow.appendChild(addBtn);
-        card.appendChild(actionsRow);
-
-        var albumList = el('div', 'adm-album-list');
-        card.appendChild(albumList);
-
-        var catOptions = [
-            { value: 'wedding',    label: 'Wedding'    },
-            { value: 'portrait',   label: 'Portrait'   },
-            { value: 'editorial',  label: 'Editorial'  },
-            { value: 'commercial', label: 'Commercial' }
-        ];
-
-        function buildAlbums() {
-            albumList.innerHTML = '';
-            albums.forEach(function (album, aidx) {
-                var albumCard = el('div', 'adm-album-card');
-
-                /* Header */
-                var head = el('div', 'adm-album-card-head');
-                var chevron = el('span', 'adm-album-toggle-icon');
-                chevron.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>';
-                var titleSpan = el('span', 'adm-album-card-title', escHtml(album.title || 'Untitled Album'));
-                var catBadge  = el('span', 'adm-album-card-cat', album.category || '');
-                head.appendChild(chevron);
-                head.appendChild(titleSpan);
-                head.appendChild(catBadge);
-                albumCard.appendChild(head);
-
-                /* Body */
-                var body = el('div', 'adm-album-card-body');
-
-                /* Title */
-                var titleInp = makeInput(album.title, 'Album Title');
-                titleInp.addEventListener('input', function () {
-                    album.title = titleInp.value;
-                    titleSpan.textContent = titleInp.value || 'Untitled Album';
-                });
-                body.appendChild(field('Album Title', titleInp));
-
-                /* Category */
-                var catSel = makeSelect(catOptions, album.category);
-                catSel.addEventListener('change', function () {
-                    album.category = catSel.value;
-                    catBadge.textContent = catSel.value;
-                });
-                body.appendChild(field('Category', catSel));
-
-                /* Cover image */
-                var coverInp     = makeInput(album.cover || (album.images && album.images[0] ? album.images[0].thumb : ''), 'https://...');
-                var coverPreview = makeImagePreview(coverInp.value);
-                bindPreview(coverInp, coverPreview);
-                coverInp.addEventListener('input', function () { album.cover = coverInp.value.trim(); });
-                body.appendChild(field('Cover Image URL', coverInp));
-                body.appendChild(coverPreview);
-
-                var hr1 = el('hr', 'adm-divider'); body.appendChild(hr1);
-
-                /* Images */
-                var imgTitle = el('div', 'adm-subsection-title', 'Photos in Album');
-                body.appendChild(imgTitle);
-
-                var imgGrid = el('div', 'adm-image-grid');
-                body.appendChild(imgGrid);
-
-                function buildImageGrid() {
-                    imgGrid.innerHTML = '';
-                    var images = album.images || [];
-                    images.forEach(function (img, iidx) {
-                        var wrap = el('div', 'adm-thumb-wrap');
-                        var thumb = el('img', 'adm-thumb');
-                        thumb.src = img.thumb || img.src || '';
-                        thumb.alt = img.title || '';
-                        var lbl = el('div', 'adm-thumb-label', escHtml(img.title || ''));
-                        var del = el('button', 'adm-thumb-delete', '×');
-                        del.type  = 'button';
-                        del.title = 'Remove photo';
-                        del.addEventListener('click', function () {
-                            if (confirm('Remove this photo?')) {
-                                album.images.splice(iidx, 1);
-                                buildImageGrid();
-                            }
-                        });
-                        wrap.appendChild(thumb);
-                        wrap.appendChild(lbl);
-                        wrap.appendChild(del);
-                        imgGrid.appendChild(wrap);
-                    });
-                }
-
-                buildImageGrid();
-
-                /* Add image row */
-                var addImgRow  = el('div', 'adm-add-image-row');
-                var addSrcInp  = makeInput('', 'Full-res URL (https://...)');
-                var addTitleInp = makeInput('', 'Photo title');
-                var addImgBtn  = el('button', 'adm-btn adm-btn--ghost adm-btn--sm', '+ Add Photo');
-                addImgBtn.type = 'button';
-                addImgBtn.addEventListener('click', function () {
-                    var src = addSrcInp.value.trim();
-                    var ttl = addTitleInp.value.trim();
-                    if (!src) { showToast('Please enter a photo URL.', 'error'); return; }
-                    /* Build thumb URL from src by injecting w=400 */
-                    var thumb = src.includes('unsplash.com') ? src.replace(/w=\d+/, 'w=400').replace(/q=\d+/, 'q=80') : src;
-                    if (!album.images) album.images = [];
-                    album.images.push({ src: src, thumb: thumb, title: ttl || 'Photo' });
-                    addSrcInp.value   = '';
-                    addTitleInp.value = '';
-                    buildImageGrid();
-                });
-                addImgRow.appendChild(addSrcInp);
-                addImgRow.appendChild(addTitleInp);
-                addImgRow.appendChild(addImgBtn);
-                body.appendChild(addImgRow);
-
-                var hr2 = el('hr', 'adm-divider'); body.appendChild(hr2);
-
-                /* Delete album */
-                var delAlbumBtn = el('button', 'adm-btn adm-btn--danger adm-btn--sm', 'Delete This Album');
-                delAlbumBtn.type = 'button';
-                delAlbumBtn.addEventListener('click', function () {
-                    if (confirm('Delete album "' + album.title + '"? This cannot be undone.')) {
-                        albums.splice(aidx, 1);
-                        buildAlbums();
-                    }
-                });
-                body.appendChild(delAlbumBtn);
-
-                albumCard.appendChild(body);
-
-                /* Toggle open/close */
-                head.addEventListener('click', function () {
-                    albumCard.classList.toggle('open');
-                });
-
-                albumList.appendChild(albumCard);
-            });
-        }
-
-        buildAlbums();
-
-        addBtn.addEventListener('click', function () {
-            albums.push({
-                id:       'album-' + Date.now(),
-                title:    '',
-                category: 'wedding',
-                cover:    '',
-                images:   []
-            });
-            buildAlbums();
-            /* Open the newly added album */
-            var cards = albumList.querySelectorAll('.adm-album-card');
-            if (cards.length) cards[cards.length - 1].classList.add('open');
-        });
-
-        /* Save */
-        var saveBar = el('div', 'adm-save-bar');
-        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save Albums');
-        saveBtn.type = 'button';
-        saveBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.portfolioAlbums = JSON.parse(JSON.stringify(albums));
-            saveData(data);
-            showToast('Portfolio albums saved!', 'success');
-        });
-        saveBar.appendChild(saveBtn);
-        card.appendChild(saveBar);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(card);
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: FEATURED WOW
-    ───────────────────────────────────────── */
-    function renderFeatured() {
-        var d  = cmsData();
-        var fw = d.featuredWow || {};
-
-        /* Get album IDs */
-        var albumIds = [];
-        if (d.portfolioAlbums) {
-            albumIds = d.portfolioAlbums.map(function (a) { return { value: a.id, label: a.title + ' (' + a.id + ')' }; });
-        } else if (typeof PORTFOLIO_ALBUMS !== 'undefined') {
-            albumIds = PORTFOLIO_ALBUMS.map(function (a) { return { value: a.id, label: a.title + ' (' + a.id + ')' }; });
-        }
-
-        var card = el('div', 'adm-card');
-        card.innerHTML = '<h2 class="adm-section-title">Featured Story</h2>';
-
-        var namesInp = makeInput(fw.names, 'Nadia & Rafiq');
-        card.appendChild(field('Couple / Subject Names', namesInp));
-
-        var placeInp = makeInput(fw.place, 'Dhaka, Bangladesh — 2024');
-        card.appendChild(field('Place & Year', placeInp));
-
-        var imgInp     = makeInput(fw.image, 'https://...');
-        var imgPreview = makeImagePreview(fw.image);
-        bindPreview(imgInp, imgPreview);
-        card.appendChild(field('Background Image URL', imgInp));
-        card.appendChild(imgPreview);
-
-        var posInp = makeInput(fw.position || 'center 35%', 'center 35%');
-        card.appendChild(field('Background Position (CSS)', posInp));
-
-        if (albumIds.length) {
-            var albumSel = makeSelect(albumIds, fw.albumId);
-            card.appendChild(field('Linked Album (data-open-album)', albumSel));
-        } else {
-            var albumInp = makeInput(fw.albumId, 'elegant-wedding');
-            card.appendChild(field('Linked Album ID', albumInp));
-        }
-
-        var saveBar = el('div', 'adm-save-bar');
-        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save Featured Story');
-        saveBtn.type = 'button';
-        saveBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.featuredWow = {
-                names:    namesInp.value.trim(),
-                place:    placeInp.value.trim(),
-                image:    imgInp.value.trim(),
-                position: posInp.value.trim(),
-                albumId:  albumIds.length ? albumSel.value : albumInp.value.trim()
-            };
-            saveData(data);
-            showToast('Featured story saved!', 'success');
-        });
-        saveBar.appendChild(saveBtn);
-        card.appendChild(saveBar);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(card);
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: PACKAGES
-    ───────────────────────────────────────── */
-    function renderPackages() {
-        var d = cmsData();
-        var packages = d.packages ? JSON.parse(JSON.stringify(d.packages)) : JSON.parse(JSON.stringify(DEFAULT_PACKAGES));
-
-        var card = el('div', 'adm-card');
-        card.innerHTML = '<h2 class="adm-section-title">Packages</h2>';
-
-        var pkgGrid = el('div', 'adm-pkg-grid');
-        card.appendChild(pkgGrid);
-
-        function buildPackages() {
-            pkgGrid.innerHTML = '';
-            packages.forEach(function (pkg, pidx) {
-                var pkgCard = el('div', 'adm-pkg-card');
-
-                var head = el('div', 'adm-pkg-head');
-                var chevron = el('span', 'adm-pkg-toggle-icon');
-                chevron.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>';
-                var titleSpan = el('span', 'adm-pkg-title', escHtml(pkg.name || 'Package'));
-                head.appendChild(chevron);
-                head.appendChild(titleSpan);
-
-                var tog = makeToggle(pkg.visible !== false, 'Visible');
-                tog.input.addEventListener('change', function () {
-                    pkg.visible = tog.input.checked;
-                });
-                head.appendChild(tog.wrap);
-
-                pkgCard.appendChild(head);
-                head.addEventListener('click', function (e) {
-                    if (e.target.closest('.adm-toggle-wrap')) return;
-                    pkgCard.classList.toggle('open');
-                });
-
-                var body = el('div', 'adm-pkg-body');
-
-                var nameInp = makeInput(pkg.name, 'Package Name');
-                nameInp.addEventListener('input', function () {
-                    pkg.name = nameInp.value;
-                    titleSpan.textContent = nameInp.value || 'Package';
-                });
-                body.appendChild(field('Package Name', nameInp));
-
-                var descTa = makeTextarea(pkg.desc, 3);
-                descTa.addEventListener('input', function () { pkg.desc = descTa.value; });
-                body.appendChild(field('Description', descTa));
-
-                var priceRow = el('div', 'adm-price-row');
-                var priceInp = makeInput(pkg.price, '500');
-                priceInp.addEventListener('input', function () { pkg.price = priceInp.value; });
-                var durInp = makeInput(pkg.duration, '2-hour session');
-                durInp.addEventListener('input', function () { pkg.duration = durInp.value; });
-
-                var priceField = field('Price (number or "Custom")', priceInp);
-                var durField   = field('Duration', durInp);
-                priceField.style.margin = '0';
-                durField.style.margin   = '0';
-                priceRow.appendChild(priceField);
-                priceRow.appendChild(durField);
-                body.appendChild(priceRow);
-
-                var hr = el('hr', 'adm-divider'); body.appendChild(hr);
-
-                /* Features */
-                var featTitle = el('div', 'adm-subsection-title', 'Package Features');
-                body.appendChild(featTitle);
-
-                var features = (pkg.features || []).slice();
-
-                var featPillList = makePillList(features, false, function (idx) {
-                    features.splice(idx, 1);
-                    pkg.features = features.slice();
-                    refreshFeats();
-                });
-                body.appendChild(featPillList);
-
-                function refreshFeats() {
-                    var newList = makePillList(features, false, function (idx) {
-                        features.splice(idx, 1);
-                        pkg.features = features.slice();
-                        refreshFeats();
-                    });
-                    featPillList.replaceWith(newList);
-                    featPillList = newList;
-                }
-
-                var addRow = el('div', 'adm-add-row');
-                var addInp = makeInput('', 'New feature...');
-                var addBtn = el('button', 'adm-btn adm-btn--ghost adm-btn--sm', '+ Add');
-                addBtn.type = 'button';
-                addBtn.addEventListener('click', function () {
-                    var val = addInp.value.trim();
-                    if (!val) return;
-                    features.push(val);
-                    pkg.features = features.slice();
-                    addInp.value = '';
-                    refreshFeats();
-                });
-                addInp.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter') { e.preventDefault(); addBtn.click(); }
-                });
-                addRow.appendChild(addInp);
-                addRow.appendChild(addBtn);
-                body.appendChild(addRow);
-
-                pkgCard.appendChild(body);
-                pkgGrid.appendChild(pkgCard);
-            });
-        }
-
-        buildPackages();
-
-        var saveBar = el('div', 'adm-save-bar');
-        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save Packages');
-        saveBtn.type = 'button';
-        saveBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.packages = JSON.parse(JSON.stringify(packages));
-            saveData(data);
-            showToast('Packages saved!', 'success');
-        });
-        saveBar.appendChild(saveBtn);
-        card.appendChild(saveBar);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(card);
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: TESTIMONIALS
-    ───────────────────────────────────────── */
-    function renderTestimonials() {
-        var d = cmsData();
-        var testimonials = d.testimonials
-            ? JSON.parse(JSON.stringify(d.testimonials))
-            : JSON.parse(JSON.stringify(DEFAULT_TESTIMONIALS));
-
-        var card = el('div', 'adm-card');
-        card.innerHTML = '<h2 class="adm-section-title">Testimonials</h2>';
-
-        var actionsRow = el('div', 'adm-actions-row');
-        var addBtn = el('button', 'adm-btn adm-btn--ghost adm-btn--sm', '+ Add New Testimonial');
-        addBtn.type = 'button';
-        actionsRow.appendChild(addBtn);
-        card.appendChild(actionsRow);
-
-        var listEl = el('div', 'adm-testi-list');
-        card.appendChild(listEl);
-
-        function buildList() {
-            listEl.innerHTML = '';
-            testimonials.forEach(function (testi, tidx) {
-                var teCard = el('div', 'adm-testi-card');
-
-                var header = el('div', 'adm-testi-header');
-                var nameSpan = el('span', 'adm-testi-name', escHtml(testi.name || 'Testimonial ' + (tidx+1)));
-                var actions  = el('div', 'adm-flex');
-
-                var tog = makeToggle(testi.visible !== false, 'Visible');
-                tog.input.addEventListener('change', function () { testi.visible = tog.input.checked; });
-
-                var delBtn = el('button', 'adm-btn adm-btn--danger adm-btn--sm', '×');
-                delBtn.type  = 'button';
-                delBtn.title = 'Delete';
-                delBtn.addEventListener('click', function () {
-                    if (confirm('Delete this testimonial?')) {
-                        testimonials.splice(tidx, 1);
-                        buildList();
-                    }
-                });
-
-                actions.appendChild(tog.wrap);
-                actions.appendChild(delBtn);
-                header.appendChild(nameSpan);
-                header.appendChild(actions);
-                teCard.appendChild(header);
-
-                var nameInp = makeInput(testi.name, 'Full Name');
-                nameInp.addEventListener('input', function () {
-                    testi.name = nameInp.value;
-                    nameSpan.textContent = nameInp.value || 'Testimonial';
-                });
-                teCard.appendChild(field('Name', nameInp));
-
-                var roleInp = makeInput(testi.role, 'Wedding — City, Year');
-                roleInp.addEventListener('input', function () { testi.role = roleInp.value; });
-                teCard.appendChild(field('Role / Session', roleInp));
-
-                var textTa = makeTextarea(testi.text, 4);
-                textTa.addEventListener('input', function () { testi.text = textTa.value; });
-                teCard.appendChild(field('Testimonial Text', textTa));
-
-                var photoInp     = makeInput(testi.photo, 'https://...');
-                var photoPreview = makeImagePreview(testi.photo);
-                bindPreview(photoInp, photoPreview);
-                photoInp.addEventListener('input', function () { testi.photo = photoInp.value.trim(); });
-                teCard.appendChild(field('Photo URL', photoInp));
-                teCard.appendChild(photoPreview);
-
-                listEl.appendChild(teCard);
-            });
-        }
-
-        buildList();
-
-        addBtn.addEventListener('click', function () {
-            testimonials.push({ name: '', role: '', text: '', photo: '', visible: true });
-            buildList();
-            listEl.lastElementChild.querySelector('.adm-input').focus();
-        });
-
-        var saveBar = el('div', 'adm-save-bar');
-        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save Testimonials');
-        saveBtn.type = 'button';
-        saveBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.testimonials = JSON.parse(JSON.stringify(testimonials));
-            saveData(data);
-            showToast('Testimonials saved!', 'success');
-        });
-        saveBar.appendChild(saveBtn);
-        card.appendChild(saveBar);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(card);
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: CONTACT
-    ───────────────────────────────────────── */
-    function renderContact() {
-        var d = cmsData();
-        var c = d.contact || {};
-
-        var card = el('div', 'adm-card');
-        card.innerHTML = '<h2 class="adm-section-title">Contact Info</h2>';
-
-        var emailInp = makeInput(c.email, 'hello@mrfphotography.com');
-        card.appendChild(field('Email Address', emailInp));
-
-        var phoneInp = makeInput(c.phone, '+880 1700 000 000');
-        card.appendChild(field('Phone / WhatsApp', phoneInp));
-
-        var locInp = makeInput(c.location, 'Dhaka, Bangladesh');
-        card.appendChild(field('Location (Based In)', locInp));
-
-        var saveBar = el('div', 'adm-save-bar');
-        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save Contact Info');
-        saveBtn.type = 'button';
-        saveBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.contact = {
-                email:    emailInp.value.trim(),
-                phone:    phoneInp.value.trim(),
-                location: locInp.value.trim()
-            };
-            saveData(data);
-            showToast('Contact info saved!', 'success');
-        });
-        saveBar.appendChild(saveBtn);
-        card.appendChild(saveBar);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(card);
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: HERO SLIDES
-    ───────────────────────────────────────── */
-    function renderHero() {
-        var d      = cmsData();
-        var slides = d.heroSlides || [{ image: '', position: 'center center' }, { image: '', position: 'center center' }, { image: '', position: 'center center' }];
-
-        var page = el('div');
-
-        var infoCard = el('div', 'adm-card');
-        infoCard.innerHTML = '<h2 class="adm-section-title">Hero Slides</h2><p style="color:var(--text-muted);font-size:.85rem;margin-bottom:0;">These 3 images rotate in your full-screen hero section. Upload photos or paste URLs. Recommended: landscape, min 1920×1080.</p>';
-        page.appendChild(infoCard);
-
-        var slideInputs = [];
-        slides.forEach(function (slide, i) {
-            var sCard = el('div', 'adm-card');
-            sCard.innerHTML = '<h3 class="adm-subsection-title">Slide ' + (i + 1) + '</h3>';
-
-            var prev    = makeImagePreview(slide.image);
-            var upl     = makeImageUploader(slide.image || '', function (url) {
-                prev.src = url;
-                prev.classList.toggle('visible', !!url);
-            });
-            sCard.appendChild(field('Image', upl.wrap));
-            sCard.appendChild(prev);
-
-            var posInp = makeInput(slide.position || 'center center', 'e.g. center 30%');
-            sCard.appendChild(field('Focus Position (background-position)', posInp));
-
-            slideInputs.push({ inp: upl.input, pos: posInp });
-            page.appendChild(sCard);
-        });
-
-        var saveBar = el('div', 'adm-save-bar');
-        var saveBtn = el('button', 'adm-btn adm-btn--primary', 'Save Hero Slides');
-        saveBtn.type = 'button';
-        saveBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.heroSlides = slideInputs.map(function (s) {
-                return { image: s.inp.value.trim(), position: s.pos.value.trim() };
-            });
-            saveData(data);
-            showToast('Hero slides saved!', 'success');
-        });
-        saveBar.appendChild(saveBtn);
-        page.appendChild(saveBar);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(page);
-    }
-
-    /* ─────────────────────────────────────────
-       SECTION: SETTINGS
-    ───────────────────────────────────────── */
-    function renderSettings() {
-        var d    = cmsData();
-        var page = el('div');
-
-        /* ── Password Change ── */
-        var passCard = el('div', 'adm-card');
-        passCard.innerHTML = '<h2 class="adm-section-title">Change Password</h2>';
-        var curInp  = makeInput('', 'Current password'); curInp.type = 'password';
-        var newInp  = makeInput('', 'New password');     newInp.type = 'password';
-        var conInp  = makeInput('', 'Confirm password'); conInp.type = 'password';
-        passCard.appendChild(field('Current Password', curInp));
-        passCard.appendChild(field('New Password', newInp));
-        passCard.appendChild(field('Confirm New Password', conInp));
-        var passSave = el('div', 'adm-save-bar');
-        var passBtn  = el('button', 'adm-btn adm-btn--primary', 'Update Password');
-        passBtn.type = 'button';
-        passBtn.addEventListener('click', function () {
-            if (curInp.value !== getAdminPass()) { showToast('Current password is incorrect', 'error'); return; }
-            if (newInp.value.length < 6)          { showToast('New password must be 6+ characters', 'error'); return; }
-            if (newInp.value !== conInp.value)    { showToast('Passwords do not match', 'error'); return; }
-            localStorage.setItem('mrf_admin_pass', newInp.value);
-            showToast('Password updated!', 'success');
-            curInp.value = newInp.value = conInp.value = '';
-        });
-        passSave.appendChild(passBtn);
-        passCard.appendChild(passSave);
-        page.appendChild(passCard);
-
-        /* ── SEO Settings ── */
-        var seoCard = el('div', 'adm-card');
-        seoCard.innerHTML = '<h2 class="adm-section-title">SEO &amp; Social Sharing</h2>';
-        var seo         = d.seo || {};
-        var seoTitle    = makeInput(seo.title || '', 'Page title');
-        var seoDesc     = makeTextarea(seo.description || '', 3); seoDesc.placeholder = 'Meta description (recommended: 150–160 characters)';
-        var seoImg      = makeInput(seo.ogImage || '', 'https://... (used for WhatsApp/Facebook previews)');
-        seoCard.appendChild(field('Page Title', seoTitle));
-        seoCard.appendChild(field('Meta Description', seoDesc));
-        seoCard.appendChild(field('Social Preview Image URL', seoImg));
-        var seoSave = el('div', 'adm-save-bar');
-        var seoBtn  = el('button', 'adm-btn adm-btn--primary', 'Save SEO Settings');
-        seoBtn.type = 'button';
-        seoBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.seo = { title: seoTitle.value.trim(), description: seoDesc.value.trim(), ogImage: seoImg.value.trim() };
-            saveData(data);
-            showToast('SEO settings saved!', 'success');
-        });
-        seoSave.appendChild(seoBtn);
-        seoCard.appendChild(seoSave);
-        page.appendChild(seoCard);
-
-        /* ── Formspree ── */
-        var fsCard = el('div', 'adm-card');
-        fsCard.innerHTML = '<h2 class="adm-section-title">Contact Form (Formspree)</h2><p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1rem;">Sign up at <a href="https://formspree.io" target="_blank" rel="noopener" style="color:var(--gold)">formspree.io</a>, create a form, and paste your endpoint URL below. Example: <code>https://formspree.io/f/xabc1234</code></p>';
-        var fsInp = makeInput(d.formspreeUrl || '', 'https://formspree.io/f/your-form-id');
-        fsCard.appendChild(field('Formspree Endpoint URL', fsInp));
-        var fsSave = el('div', 'adm-save-bar');
-        var fsBtn  = el('button', 'adm-btn adm-btn--primary', 'Save Formspree URL');
-        fsBtn.type = 'button';
-        fsBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.formspreeUrl = fsInp.value.trim();
-            saveData(data);
-            showToast('Formspree URL saved!', 'success');
-        });
-        fsSave.appendChild(fsBtn);
-        fsCard.appendChild(fsSave);
-        page.appendChild(fsCard);
-
-        /* ── Calendly ── */
-        var calCard = el('div', 'adm-card');
-        calCard.innerHTML = '<h2 class="adm-section-title">Calendly Booking</h2><p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1rem;">Paste your Calendly URL to enable direct booking from your portfolio. Example: <code>https://calendly.com/yourname</code></p>';
-        var calInp = makeInput(d.calendlyUrl || '', 'https://calendly.com/yourname');
-        calCard.appendChild(field('Your Calendly URL', calInp));
-        var calSave = el('div', 'adm-save-bar');
-        var calBtn  = el('button', 'adm-btn adm-btn--primary', 'Save Calendly URL');
-        calBtn.type = 'button';
-        calBtn.addEventListener('click', function () {
-            var data = cmsData();
-            data.calendlyUrl = calInp.value.trim();
-            saveData(data);
-            showToast('Calendly URL saved!', 'success');
-        });
-        calSave.appendChild(calBtn);
-        calCard.appendChild(calSave);
-        page.appendChild(calCard);
-
-        /* ── Export / Import ── */
-        var dataCard = el('div', 'adm-card');
-        dataCard.innerHTML = '<h2 class="adm-section-title">Export &amp; Import Data</h2><p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1.5rem;">Export saves all your content to a JSON file. Import restores from a previously exported file. <strong>Warning:</strong> importing will overwrite all current content.</p>';
-        var dataRow = el('div', 'adm-save-bar');
-
-        var expBtn = el('button', 'adm-btn adm-btn--primary', 'Export Data');
-        expBtn.type = 'button';
-        expBtn.addEventListener('click', function () {
-            var raw  = localStorage.getItem('mrf_cms') || '{}';
-            var blob = new Blob([raw], { type: 'application/json' });
-            var url  = URL.createObjectURL(blob);
-            var a    = document.createElement('a');
-            a.href     = url;
-            a.download = 'mrf-cms-backup-' + new Date().toISOString().slice(0, 10) + '.json';
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('Data exported!', 'success');
-        });
-
-        var impFileInp  = document.createElement('input');
-        impFileInp.type = 'file';
-        impFileInp.accept = '.json,application/json';
-        impFileInp.className = 'adm-file-input';
-        impFileInp.id = 'import-file';
-
-        var impBtn   = el('label', 'adm-btn adm-btn--ghost', 'Import Data');
-        impBtn.htmlFor = 'import-file';
-
-        impFileInp.addEventListener('change', function () {
-            var file = impFileInp.files[0];
-            if (!file) return;
-            var reader = new FileReader();
-            reader.onload = function (ev) {
-                try {
-                    var parsed = JSON.parse(ev.target.result);
-                    localStorage.setItem('mrf_cms', JSON.stringify(parsed));
-                    showToast('Data imported! Reloading…', 'success');
-                    setTimeout(function () { window.location.reload(); }, 1200);
-                } catch (err) {
-                    showToast('Invalid JSON file', 'error');
-                }
-            };
-            reader.readAsText(file);
-        });
-
-        dataRow.appendChild(expBtn);
-        dataRow.appendChild(impFileInp);
-        dataRow.appendChild(impBtn);
-        dataCard.appendChild(dataRow);
-        page.appendChild(dataCard);
-
-        contentArea.innerHTML = '';
-        contentArea.appendChild(page);
-    }
-
-    /* ─────────────────────────────────────────
-       UTILITY: escHtml
-    ───────────────────────────────────────── */
-    function escHtml(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
-
-    /* ─────────────────────────────────────────
-       INIT
-    ───────────────────────────────────────── */
-    checkAuth();
-
-})();
+  });
+});
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.gear-pill button');
+  if (btn && !btn.closest('.gear-pill.add')) btn.parentElement.remove();
+});
+
+// ─── Featured preview live update ───
+$('#ip-headline')?.addEventListener('input', (e) => {
+  const html = e.target.value.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  $('#fp-names').innerHTML = html;
+});
+$('#ip-place')?.addEventListener('input', (e) => {
+  const date = e.target.value.includes('·') ? '' : ' · January 2025';
+  $('#fp-place').textContent = e.target.value + date;
+});
+
+// ─── Command palette ───
+const cmdItems = [
+  { name: 'Dashboard', group: 'Navigate', section: 'dashboard' },
+  { name: 'Portfolio Albums', group: 'Navigate', section: 'albums' },
+  { name: 'Featured Story', group: 'Navigate', section: 'featured' },
+  { name: 'Packages', group: 'Navigate', section: 'packages' },
+  { name: 'Testimonials', group: 'Navigate', section: 'testimonials' },
+  { name: 'About & Profile', group: 'Navigate', section: 'about' },
+  { name: 'Gear & Tools', group: 'Navigate', section: 'gear' },
+  { name: 'Experience', group: 'Navigate', section: 'experience' },
+  { name: 'Inquiries', group: 'Navigate', section: 'inquiries' },
+  { name: 'New Album', group: 'Action' },
+  { name: 'New Testimonial', group: 'Action' },
+  { name: 'Switch theme', group: 'Action' },
+  { name: 'Toggle film grain', group: 'Action' },
+];
+
+function renderCmd(filter = '') {
+  const list = $('#cmd-list');
+  const f = filter.toLowerCase();
+  const filtered = cmdItems.filter(c => c.name.toLowerCase().includes(f));
+  list.innerHTML = filtered.map((c, i) => `
+    <div class="cmd-row ${i === 0 ? 'active' : ''}" data-section="${c.section || ''}" data-name="${c.name}">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 18 15 12 9 6"/></svg>
+      ${c.name}
+      <span class="group">${c.group}</span>
+    </div>
+  `).join('');
+}
+
+function openCmd() {
+  $('#cmd-overlay').classList.add('show');
+  $('#cmd-input').value = '';
+  renderCmd();
+  setTimeout(() => $('#cmd-input').focus(), 50);
+}
+function closeCmd() { $('#cmd-overlay').classList.remove('show'); }
+
+$('#open-cmd').addEventListener('click', openCmd);
+$('#sidebar-search').addEventListener('focus', openCmd);
+$('#cmd-input').addEventListener('input', e => renderCmd(e.target.value));
+$('#cmd-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeCmd(); });
+
+document.addEventListener('click', (e) => {
+  const row = e.target.closest('.cmd-row');
+  if (!row) return;
+  const sec = row.dataset.section;
+  if (sec) {
+    const navBtn = $(`.nav-item[data-section="${sec}"]`);
+    if (navBtn) navBtn.click();
+  } else {
+    toast(row.dataset.name, 'Action triggered');
+  }
+  closeCmd();
+});
+
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openCmd();
+  }
+  if (e.key === 'Escape') closeCmd();
+});
+
+// ─── Theme toggle (sidebar) ───
+$('#theme-toggle')?.addEventListener('click', () => {
+  const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  setTheme(t);
+});
+
+function setTheme(t) {
+  document.documentElement.dataset.theme = t;
+  const tb = $('#theme-toggle');
+  if (tb) tb.textContent = t === 'dark' ? 'Light' : 'Dark';
+  // Sync segmented control
+  $$('#theme-seg button').forEach(b => b.classList.toggle('active', b.dataset.themeSet === t));
+}
+
+// ─── Tweaks panel ───
+const fab = $('#tweaks-fab');
+const panel = $('#tweaks-panel');
+fab.addEventListener('click', () => {
+  panel.classList.toggle('open');
+  fab.style.display = panel.classList.contains('open') ? 'none' : 'flex';
+});
+$('#tweaks-close').addEventListener('click', () => {
+  panel.classList.remove('open');
+  fab.style.display = 'flex';
+});
+
+// Accent
+$$('.tweak-swatch').forEach(s => {
+  s.addEventListener('click', () => {
+    $$('.tweak-swatch').forEach(x => x.classList.remove('active'));
+    s.classList.add('active');
+    const c = s.dataset.accent;
+    document.documentElement.style.setProperty('--gold', c);
+    // derive light + soft
+    document.documentElement.style.setProperty('--gold-light', shade(c, 12));
+    document.documentElement.style.setProperty('--gold-dark', shade(c, -18));
+    document.documentElement.style.setProperty('--gold-soft', hexA(c, 0.14));
+    document.documentElement.style.setProperty('--gold-glow', hexA(c, 0.22));
+  });
+});
+
+function hexA(hex, a) {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substr(0, 2), 16);
+  const g = parseInt(h.substr(2, 2), 16);
+  const b = parseInt(h.substr(4, 2), 16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function shade(hex, pct) {
+  const h = hex.replace('#', '');
+  const num = parseInt(h, 16);
+  let r = (num >> 16) + Math.round(255 * pct / 100);
+  let g = ((num >> 8) & 0xff) + Math.round(255 * pct / 100);
+  let b = (num & 0xff) + Math.round(255 * pct / 100);
+  r = Math.max(0, Math.min(255, r));
+  g = Math.max(0, Math.min(255, g));
+  b = Math.max(0, Math.min(255, b));
+  return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+}
+
+// Theme segmented
+$$('#theme-seg button').forEach(b => {
+  b.addEventListener('click', () => setTheme(b.dataset.themeSet));
+});
+// Density
+$$('#density-seg button').forEach(b => {
+  b.addEventListener('click', () => {
+    $$('#density-seg button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.documentElement.dataset.density = b.dataset.densitySet;
+  });
+});
+// Serif
+$$('#serif-seg button').forEach(b => {
+  b.addEventListener('click', () => {
+    $$('#serif-seg button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.documentElement.dataset.serif = b.dataset.serifSet;
+  });
+});
+// Grain
+$$('#grain-seg button').forEach(b => {
+  b.addEventListener('click', () => {
+    $$('#grain-seg button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.documentElement.dataset.grain = b.dataset.grainSet;
+  });
+});
+
+// ─── Inquiries rows: click to "open" ───
+document.addEventListener('click', (e) => {
+  const inq = e.target.closest('.inquiry');
+  if (inq && !e.target.closest('button')) toast('Opening inquiry', inq.querySelector('.inq-name')?.textContent || '');
+});
+
+// ─── Welcome toast ───
+setTimeout(() => toast('Welcome back, Fahim', 'Seven inquiries await your reply'), 600);

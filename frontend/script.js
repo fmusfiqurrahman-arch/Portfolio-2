@@ -1085,3 +1085,15 @@
     if (el) el.textContent = new Date().getFullYear();
 })();
 
+/* Scroll to top */
+(function () {
+    var btn = document.getElementById('scroll-top');
+    if (!btn) return;
+    window.addEventListener('scroll', function () {
+        btn.classList.toggle('visible', window.pageYOffset > 500);
+    }, { passive: true });
+    btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();
+

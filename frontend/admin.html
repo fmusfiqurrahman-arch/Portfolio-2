@@ -1,139 +1,963 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-density="comfortable" data-serif="balanced" data-grain="on">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRF Admin Panel</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/admin.css">
+<meta charset="UTF-8">
+<title>MRF Photography — Atelier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+
 </head>
 <body>
+<div class="grain"></div>
 
-    <!-- Login Screen -->
-    <div class="adm-login-screen" id="adm-login-screen">
-        <div class="adm-login-card">
-            <div class="adm-login-logo">
-                <div class="adm-login-logo-mark">MRF</div>
-                <span>Photography &mdash; Admin Panel</span>
+<div class="app">
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">MRF</div>
+      <span class="brand-italic">Studio Atelier</span>
+      <span class="brand-sub">Est. MMXIX · Dhaka</span>
+    </div>
+    <div class="ornament-rule"><span class="diamond"></span></div>
+
+    <div class="side-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" placeholder="Search anything…" id="sidebar-search">
+      <kbd>⌘K</kbd>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <button class="nav-item active" data-section="dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-item" data-section="inquiries">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Inquiries
+          <span class="nav-badge">7</span>
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Content</div>
+        <button class="nav-item" data-section="albums">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          Portfolio Albums
+        </button>
+        <button class="nav-item" data-section="featured">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 15.09 8.26 22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+          Featured Story
+        </button>
+        <button class="nav-item" data-section="packages">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          Packages
+        </button>
+        <button class="nav-item" data-section="testimonials">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          Testimonials
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Site</div>
+        <button class="nav-item" data-section="about">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          About &amp; Profile
+        </button>
+        <button class="nav-item" data-section="gear">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          Gear &amp; Tools
+        </button>
+        <button class="nav-item" data-section="experience">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Experience
+        </button>
+        <button class="nav-item" data-section="contact">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Contact Info
+        </button>
+      </div>
+    </nav>
+
+    <div class="side-footer">
+      <div class="profile-chip">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120" class="profile-avatar" alt="">
+        <div>
+          <div class="profile-name">M. R. Fahim</div>
+          <div class="profile-role">Photographer</div>
+        </div>
+      </div>
+      <div class="side-actions">
+        <button class="btn btn-ghost btn-sm" onclick="window.open('#','_blank')">View Site</button>
+        <button class="btn btn-ghost btn-sm" id="theme-toggle">Light</button>
+        <button class="btn btn-ghost btn-icon btn-sm" title="Sign out">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">
+        <span>Workspace</span>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-current" id="crumb">Dashboard</span>
+      </div>
+      <div class="top-spacer"></div>
+      <div class="top-clock">
+        <span class="clock-date" id="top-date">Monday · 11 May</span>
+        <span id="top-time">7:42 PM</span>
+      </div>
+      <button class="top-icon-btn" id="open-cmd" title="Quick search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button class="top-icon-btn" title="Notifications">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="dot"></span>
+      </button>
+      <button class="top-icon-btn" title="Preview site">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </header>
+
+    <div class="content" id="content">
+
+      <!-- ━━━━━━━ DASHBOARD ━━━━━━━ -->
+      <section class="section active" data-name="dashboard">
+        <div class="dash-greeting">
+          <h1>Good evening, <em>Fahim.</em></h1>
+          <p>Seven inquiries await your reply. Two stories from last weekend are ready to publish.</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-label">Albums Published</div>
+            <div class="stat-num">42</div>
+            <div class="stat-foot"><span class="stat-delta">+3</span> this month</div>
+            <svg class="stat-spark" width="48" height="20" viewBox="0 0 48 20" fill="none" stroke="#C9A661" stroke-width="1.2"><polyline points="0,15 8,12 16,14 24,8 32,10 40,5 48,7"/></svg>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Sessions, 2025</div>
+            <div class="stat-num">68</div>
+            <div class="stat-foot"><span class="stat-delta">+24%</span> vs last year</div>
+            <svg class="stat-spark" width="48" height="20" viewBox="0 0 48 20" fill="none" stroke="#C9A661" stroke-width="1.2"><polyline points="0,16 8,14 16,11 24,12 32,8 40,6 48,4"/></svg>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Pending Inquiries</div>
+            <div class="stat-num">7</div>
+            <div class="stat-foot"><span class="stat-delta down">2 urgent</span></div>
+            <svg class="stat-spark" width="48" height="20" viewBox="0 0 48 20" fill="none" stroke="#C9A661" stroke-width="1.2"><polyline points="0,10 8,8 16,12 24,11 32,14 40,9 48,12"/></svg>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Revenue, YTD</div>
+            <div class="stat-num"><span class="unit">৳</span>14.8<span class="unit">L</span></div>
+            <div class="stat-foot"><span class="stat-delta">+৳2.1L</span> this quarter</div>
+            <svg class="stat-spark" width="48" height="20" viewBox="0 0 48 20" fill="none" stroke="#C9A661" stroke-width="1.2"><polyline points="0,18 8,15 16,13 24,10 32,8 40,5 48,3"/></svg>
+          </div>
+        </div>
+
+        <div class="dash-cols">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Recent Inquiries</div>
+                <div class="panel-sub">Seven souls seeking your lens</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">View all</button>
             </div>
-            <h2>Sign in to continue</h2>
-            <div class="adm-login-error" id="adm-login-error">Invalid username or password.</div>
-            <div class="adm-field">
-                <label for="adm-username">Username</label>
-                <input type="text" id="adm-username" class="adm-input" placeholder="admin" autocomplete="username">
+            <div class="panel-body flush">
+              <div class="inquiry">
+                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80" class="inq-avatar" alt="">
+                <div class="inq-main">
+                  <div class="inq-name">Anika Rahman</div>
+                  <div class="inq-msg">"We're getting married in December and absolutely loved your Sunset album…"</div>
+                </div>
+                <span class="inq-tag">Wedding</span>
+                <div class="inq-time">2h ago</div>
+              </div>
+              <div class="inquiry">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80" class="inq-avatar" alt="">
+                <div class="inq-main">
+                  <div class="inq-name">Sadia &amp; Tahmid</div>
+                  <div class="inq-msg">"Engagement session in Sundarbans, weekend of the 22nd — is that available?"</div>
+                </div>
+                <span class="inq-tag warm">Engagement</span>
+                <div class="inq-time">6h ago</div>
+              </div>
+              <div class="inquiry">
+                <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80" class="inq-avatar" alt="">
+                <div class="inq-main">
+                  <div class="inq-name">Karim Studio</div>
+                  <div class="inq-msg">"Editorial collaboration for our autumn collection. Brief attached."</div>
+                </div>
+                <span class="inq-tag cool">Editorial</span>
+                <div class="inq-time">Yesterday</div>
+              </div>
+              <div class="inquiry">
+                <img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=80" class="inq-avatar" alt="">
+                <div class="inq-main">
+                  <div class="inq-name">Nusrat Jahan</div>
+                  <div class="inq-msg">"My parents' 40th anniversary — family portraits, intimate gathering."</div>
+                </div>
+                <span class="inq-tag">Portrait</span>
+                <div class="inq-time">2 days</div>
+              </div>
             </div>
-            <div class="adm-field">
-                <label for="adm-password">Password</label>
-                <input type="password" id="adm-password" class="adm-input" placeholder="••••••••" autocomplete="current-password">
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Activity</div>
+                <div class="panel-sub">A quiet chronicle</div>
+              </div>
             </div>
-            <button class="adm-btn adm-btn--primary adm-w-full" id="adm-login-btn" style="margin-top:0.5rem; justify-content:center; padding:0.7rem;">
-                Sign In
+            <div class="panel-body flush activity">
+              <div class="act-row gold">
+                <div class="act-dot"></div>
+                <div class="act-text"><em>Published</em><b>Of Tides &amp; Trousseaux</b> · 38 photographs, hero set as cover.</div>
+                <div class="act-time">2h</div>
+              </div>
+              <div class="act-row">
+                <div class="act-dot"></div>
+                <div class="act-text"><em>Replied</em>to inquiry from <b>Anika Rahman</b>.</div>
+                <div class="act-time">3h</div>
+              </div>
+              <div class="act-row">
+                <div class="act-dot"></div>
+                <div class="act-text"><em>Updated</em>the <b>Heirloom Package</b> — added drone coverage option.</div>
+                <div class="act-time">Yest.</div>
+              </div>
+              <div class="act-row gold">
+                <div class="act-dot"></div>
+                <div class="act-text"><em>Uploaded</em>16 new photographs to <b>Sundarbans · Pre-Wedding</b>.</div>
+                <div class="act-time">2d</div>
+              </div>
+              <div class="act-row">
+                <div class="act-dot"></div>
+                <div class="act-text"><em>Featured Story</em>swapped to <b>The Boatman's Daughter</b>.</div>
+                <div class="act-time">4d</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel mt-2">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Latest Uploads</div>
+              <div class="panel-sub">From the cutting room floor</div>
+            </div>
+            <button class="btn btn-ghost btn-sm">Open library</button>
+          </div>
+          <div class="panel-body">
+            <div class="upload-grid">
+              <div class="upload-cell"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=300" alt=""></div>
+              <div class="upload-cell"><img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=300" alt=""></div>
+              <div class="upload-cell"><img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=300" alt=""></div>
+              <div class="upload-cell"><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=300" alt=""></div>
+              <div class="upload-cell"><img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=300" alt=""></div>
+              <div class="upload-cell"><img src="https://images.unsplash.com/photo-1525258946800-98cfd641d0de?w=300" alt=""></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel mt-2">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Upcoming Sessions</div>
+              <div class="panel-sub">Three on the horizon</div>
+            </div>
+          </div>
+          <div class="panel-body flush">
+            <div class="session">
+              <div class="sess-date"><div class="sess-day">15</div><div class="sess-mon">May</div></div>
+              <div><div class="sess-title">Faria &amp; Rashid · Holud Ceremony</div><div class="sess-sub">Gulshan · Full day · Heirloom Package</div></div>
+              <button class="btn btn-outline-gold btn-sm">Open brief</button>
+            </div>
+            <div class="session">
+              <div class="sess-date"><div class="sess-day">22</div><div class="sess-mon">May</div></div>
+              <div><div class="sess-title">Sundarbans Pre-Wedding</div><div class="sess-sub">Sadia &amp; Tahmid · 2 days · Bespoke quote</div></div>
+              <button class="btn btn-outline-gold btn-sm">Open brief</button>
+            </div>
+            <div class="session">
+              <div class="sess-date"><div class="sess-day">02</div><div class="sess-mon">Jun</div></div>
+              <div><div class="sess-title">Karim Studio · Autumn Editorial</div><div class="sess-sub">Banani studio · Half day · Commercial</div></div>
+              <button class="btn btn-outline-gold btn-sm">Open brief</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━ ALBUMS ━━━━━━━ -->
+      <section class="section" data-name="albums">
+        <div class="sec-head">
+          <div>
+            <span class="sec-num"><span class="roman">III</span>Portfolio · 02</span>
+            <h1 class="sec-title">Albums &amp; <em>Collections</em></h1>
+            <div class="sec-meta">42 published · 6 drafts · last update 2h ago</div>
+          </div>
+          <div class="sec-head-actions">
+            <button class="btn btn-ghost btn-sm">Reorder</button>
+            <button class="btn btn-primary btn-sm" id="new-album-btn">+ New Album</button>
+          </div>
+        </div>
+
+        <div class="album-toolbar">
+          <div class="filters">
+            <button class="filter-pill active" data-filter="all">All · 42</button>
+            <button class="filter-pill" data-filter="wedding">Weddings · 18</button>
+            <button class="filter-pill" data-filter="engagement">Engagements · 11</button>
+            <button class="filter-pill" data-filter="editorial">Editorial · 8</button>
+            <button class="filter-pill" data-filter="portrait">Portraits · 5</button>
+          </div>
+        </div>
+
+        <div class="drawer" id="album-drawer">
+          <div class="drawer-hero">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1400" alt="">
+            <button class="btn btn-ghost btn-icon drawer-hero-close" onclick="closeDrawer()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
             </button>
+            <div class="drawer-hero-text">
+              <div class="drawer-hero-tag">Album · Wedding</div>
+              <div class="drawer-hero-title">Of Tides &amp; <em>Trousseaux</em></div>
+            </div>
+          </div>
+          <div class="drawer-body">
+            <div class="field-row">
+              <div class="field"><label class="field-label">Album Title</label><input class="input" value="Of Tides & Trousseaux"></div>
+              <div class="field"><label class="field-label">Place &amp; Date</label><input class="input" value="Cox's Bazar · February 2025"></div>
+            </div>
+            <div class="field"><label class="field-label">Caption <span class="opt">italic, displayed under title</span></label><textarea class="textarea">A coastal wedding measured in salt air and the rustle of silk.</textarea></div>
+            <div class="field-row">
+              <div class="field"><label class="field-label">Category</label><select class="select"><option>Wedding</option><option>Engagement</option><option>Editorial</option><option>Portrait</option></select></div>
+              <div class="field"><label class="field-label">Visibility</label><select class="select"><option>Public</option><option>Unlisted</option><option>Draft</option></select></div>
+            </div>
+
+            <div class="drawer-grid-head">
+              <h4>Photographs · 38</h4>
+              <div class="row"><button class="btn btn-ghost btn-sm">Reorder</button><button class="btn btn-outline-gold btn-sm">+ Add photos</button></div>
+            </div>
+
+            <div class="photo-grid" id="photo-grid">
+              <div class="photo cover"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=300" alt=""><span class="x">×</span></div>
+              <div class="photo"><img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=300" alt=""><span class="x">×</span></div>
+              <div class="photo"><img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=300" alt=""><span class="x">×</span></div>
+              <div class="photo"><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=300" alt=""><span class="x">×</span></div>
+              <div class="photo"><img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=300" alt=""><span class="x">×</span></div>
+              <div class="photo"><img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=300" alt=""><span class="x">×</span></div>
+              <div class="photo"><img src="https://images.unsplash.com/photo-1525258946800-98cfd641d0de?w=300" alt=""><span class="x">×</span></div>
+              <div class="photo"><img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=300" alt=""><span class="x">×</span></div>
+              <div class="photo"><img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=300" alt=""><span class="x">×</span></div>
+              <div class="photo"><img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=300" alt=""><span class="x">×</span></div>
+            </div>
+
+            <div class="drop mt-2" id="album-drop">
+              <div class="drop-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div class="drop-title">Drop photographs to add to this album</div>
+              <div class="drop-sub">or click to browse · JPG, PNG, RAW up to 50 MB</div>
+            </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Admin App -->
-    <div class="adm-app" id="adm-app">
-        <div class="adm-layout">
-
-            <!-- Sidebar -->
-            <aside class="adm-sidebar">
-                <div class="adm-sidebar-brand">
-                    <div>
-                        <div class="adm-sidebar-brand-name">MRF Admin</div>
-                        <div class="adm-sidebar-brand-sub">Photography CMS</div>
-                    </div>
-                    <button class="adm-theme-btn" id="adm-theme-btn" aria-label="Toggle dark mode">
-                        <svg class="moon-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                        <svg class="sun-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                    </button>
+        <div class="album-grid" id="album-grid">
+          <div class="album" draggable="true" data-cat="wedding" onclick="openDrawer()">
+            <div class="album-cover">
+              <span class="album-handle" title="Drag to reorder">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg>
+              </span>
+              <span class="album-tag">Wedding</span>
+              <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600" alt="">
+              <span class="album-count">38 photos</span>
+            </div>
+            <div class="album-body">
+              <div class="album-name">Of Tides &amp; Trousseaux</div>
+              <div class="album-place">Cox's Bazar · February 2025</div>
+              <div class="album-actions">
+                <span class="muted" style="font-size: 0.75rem;">Published</span>
+                <div class="icons">
+                  <button class="btn btn-ghost btn-icon btn-sm" title="Edit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
+                  <button class="btn btn-ghost btn-icon btn-sm" title="Share"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <nav class="adm-nav" id="adm-nav">
-                    <div class="adm-nav-label">Content</div>
-                    <button class="adm-nav-item active" data-section="about">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/></svg>
-                        <span>About &amp; Profile</span>
-                    </button>
-                    <button class="adm-nav-item" data-section="gear">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M20.49 12a8.5 8.5 0 0 1-16.98 0M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41"/></svg>
-                        <span>Gear &amp; Tools</span>
-                    </button>
-                    <button class="adm-nav-item" data-section="experience">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                        <span>Experience</span>
-                    </button>
-                    <button class="adm-nav-item" data-section="albums">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                        <span>Portfolio Albums</span>
-                    </button>
-                    <button class="adm-nav-item" data-section="featured">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <span>Featured Story</span>
-                    </button>
-                    <button class="adm-nav-item" data-section="packages">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                        <span>Packages</span>
-                    </button>
-                    <button class="adm-nav-item" data-section="testimonials">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                        <span>Testimonials</span>
-                    </button>
-                    <button class="adm-nav-item" data-section="contact">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                        <span>Contact Info</span>
-                    </button>
-                    <div class="adm-nav-label">Settings</div>
-                    <button class="adm-nav-item" data-section="hero">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-                        <span>Hero Slides</span>
-                    </button>
-                    <button class="adm-nav-item" data-section="settings">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M20.49 12a8.5 8.5 0 0 1-16.98 0M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41"/></svg>
-                        <span>Settings</span>
-                    </button>
-                </nav>
-
-                <div class="adm-sidebar-footer">
-                    <a href="index.html" target="_blank" class="adm-btn adm-btn--ghost adm-btn--sm">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                        <span>View Site</span>
-                    </a>
-                    <button class="adm-btn adm-btn--dark adm-btn--sm" id="adm-logout-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                        <span>Logout</span>
-                    </button>
+          <div class="album" draggable="true" data-cat="engagement">
+            <div class="album-cover">
+              <span class="album-handle">⠿</span>
+              <span class="album-tag">Engagement</span>
+              <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600" alt="">
+              <span class="album-count">52 photos</span>
+            </div>
+            <div class="album-body">
+              <div class="album-name">Letters from <em style="font-family: var(--font-italic); font-style: italic; color: var(--gold);">Sundarbans</em></div>
+              <div class="album-place">Khulna · January 2025</div>
+              <div class="album-actions">
+                <span class="muted" style="font-size: 0.75rem;">Published</span>
+                <div class="icons">
+                  <button class="btn btn-ghost btn-icon btn-sm">···</button>
                 </div>
-            </aside>
+              </div>
+            </div>
+          </div>
 
-            <!-- Content -->
-            <main class="adm-content" id="adm-content-area"></main>
+          <div class="album" draggable="true" data-cat="editorial">
+            <div class="album-cover">
+              <span class="album-tag">Editorial</span>
+              <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=600" alt="">
+              <span class="album-count">24 photos</span>
+            </div>
+            <div class="album-body">
+              <div class="album-name">The Atelier Hours</div>
+              <div class="album-place">Dhaka · November 2024</div>
+              <div class="album-actions">
+                <span class="muted" style="font-size: 0.75rem;">Published</span>
+                <div class="icons"><button class="btn btn-ghost btn-icon btn-sm">···</button></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="album" draggable="true" data-cat="wedding">
+            <div class="album-cover">
+              <span class="album-tag">Wedding</span>
+              <img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=600" alt="">
+              <span class="album-count">61 photos</span>
+            </div>
+            <div class="album-body">
+              <div class="album-name">A Garden Wedding</div>
+              <div class="album-place">Sylhet · October 2024</div>
+              <div class="album-actions"><span class="muted" style="font-size: 0.75rem;">Published</span><div class="icons"><button class="btn btn-ghost btn-icon btn-sm">···</button></div></div>
+            </div>
+          </div>
+
+          <div class="album" draggable="true" data-cat="portrait">
+            <div class="album-cover">
+              <span class="album-tag">Portrait</span>
+              <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=600" alt="">
+              <span class="album-count">14 photos</span>
+            </div>
+            <div class="album-body">
+              <div class="album-name">Quiet Hours</div>
+              <div class="album-place">Studio · September 2024</div>
+              <div class="album-actions"><span class="muted" style="font-size: 0.75rem;">Draft</span><div class="icons"><button class="btn btn-ghost btn-icon btn-sm">···</button></div></div>
+            </div>
+          </div>
+
+          <div class="album-new" id="new-album-card">
+            <div class="plus">+</div>
+            <div class="album-new-label">Begin a new album</div>
+          </div>
         </div>
+      </section>
+
+      <!-- ━━━━━━━ FEATURED STORY ━━━━━━━ -->
+      <section class="section" data-name="featured">
+        <div class="sec-head">
+          <div>
+            <span class="sec-num"><span class="roman">IV</span>Above the fold · 03</span>
+            <h1 class="sec-title">The <em>Featured</em> Story</h1>
+            <div class="sec-meta">Currently showing · The Boatman's Daughter</div>
+          </div>
+          <div class="sec-head-actions">
+            <button class="btn btn-ghost btn-sm">Preview on site</button>
+            <button class="btn btn-primary btn-sm" data-save>Save changes</button>
+          </div>
+        </div>
+
+        <div class="feat-layout">
+          <div class="feat-preview" id="feat-preview">
+            <img class="feat-preview-img" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1400" alt="">
+            <div class="feat-preview-overlay"></div>
+            <span class="feat-preview-watermark">Featured · Live on site</span>
+            <button class="btn btn-outline-gold btn-sm feat-preview-replace">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,4 23,10 17,10"/><polyline points="1,20 1,14 7,14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Replace image
+            </button>
+            <div class="feat-preview-caption">
+              <div class="feat-preview-tag">A Featured Story</div>
+              <div class="feat-preview-names" id="fp-names">The Boatman's <em>Daughter</em></div>
+              <div class="feat-preview-place" id="fp-place">Sundarbans · January 2025</div>
+            </div>
+          </div>
+
+          <div class="feat-controls">
+            <div class="panel">
+              <div class="panel-head"><div><div class="panel-title">Story Details</div><div class="panel-sub">Title shown on home page</div></div></div>
+              <div class="panel-body">
+                <div class="field"><label class="field-label">Headline <span class="opt">use * for italic emphasis</span></label><input class="input" id="ip-headline" value="The Boatman's *Daughter*"></div>
+                <div class="field-row">
+                  <div class="field"><label class="field-label">Place</label><input class="input" id="ip-place" value="Sundarbans"></div>
+                  <div class="field"><label class="field-label">Date</label><input class="input" value="January 2025"></div>
+                </div>
+                <div class="field"><label class="field-label">Caption</label><textarea class="textarea">A morning that began before the herons; a story carried by tide and silence.</textarea></div>
+                <div class="field"><label class="field-label">Linked Album</label><select class="select"><option>Letters from Sundarbans</option><option>Of Tides &amp; Trousseaux</option><option>The Atelier Hours</option></select></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><div><div class="panel-title">Display Options</div></div></div>
+              <div class="panel-body" style="padding-top: 0;">
+                <div class="toggle-row">
+                  <div class="toggle-label"><span class="ttl">Show on home page</span><span class="sub">Currently live · last published 4 days ago</span></div>
+                  <div class="toggle on" data-toggle></div>
+                </div>
+                <div class="toggle-row">
+                  <div class="toggle-label"><span class="ttl">Auto-rotate weekly</span><span class="sub">Pulls next featured album every Monday</span></div>
+                  <div class="toggle" data-toggle></div>
+                </div>
+                <div class="toggle-row">
+                  <div class="toggle-label"><span class="ttl">Dark gradient overlay</span><span class="sub">Improves caption legibility on bright images</span></div>
+                  <div class="toggle on" data-toggle></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="drop" id="feat-drop">
+              <div class="drop-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              </div>
+              <div class="drop-title">Replace hero image</div>
+              <div class="drop-sub">Drop a photograph here · or click to browse</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━ PACKAGES ━━━━━━━ -->
+      <section class="section" data-name="packages">
+        <div class="sec-head">
+          <div>
+            <span class="sec-num"><span class="roman">V</span>Services · 04</span>
+            <h1 class="sec-title">Packages &amp; <em>Pricing</em></h1>
+            <div class="sec-meta">5 active tiers · 1 featured · last update yesterday</div>
+          </div>
+          <div class="sec-head-actions">
+            <button class="btn btn-ghost btn-sm">Reorder</button>
+            <button class="btn btn-primary btn-sm">+ New Package</button>
+          </div>
+        </div>
+
+        <div class="pkg-list" id="pkg-list">
+          <div class="pkg">
+            <div class="pkg-head" onclick="togglePkg(this)">
+              <div class="pkg-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
+              <div><div class="pkg-name">Quiet Hours</div><div class="pkg-desc">Single-session portraiture · 2 hours · 30 edits</div></div>
+              <div class="pkg-price"><div class="pkg-price-from">Starting</div><div class="pkg-price-amount"><span class="ccy">৳</span>18,000</div></div>
+              <div class="pkg-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="pkg-body">
+              <div class="pkg-body-grid">
+                <div>
+                  <div class="field"><label class="field-label">Name</label><input class="input" value="Quiet Hours"></div>
+                  <div class="field"><label class="field-label">Tagline</label><input class="input" value="Single-session portraiture"></div>
+                  <div class="field-row">
+                    <div class="field"><label class="field-label">Price (৳)</label><input class="input" value="18000"></div>
+                    <div class="field"><label class="field-label">Duration</label><input class="input" value="2 hours"></div>
+                  </div>
+                  <div class="toggle-row"><div class="toggle-label"><span class="ttl">Mark as featured</span></div><div class="toggle" data-toggle></div></div>
+                </div>
+                <div>
+                  <label class="field-label">Includes</label>
+                  <div class="includes-list">
+                    <div class="includes-row"><span class="dot"></span><input value="2 hours of coverage"><button>×</button></div>
+                    <div class="includes-row"><span class="dot"></span><input value="30 edited photographs"><button>×</button></div>
+                    <div class="includes-row"><span class="dot"></span><input value="Online private gallery"><button>×</button></div>
+                    <div class="includes-row"><span class="dot"></span><input value="Print release"><button>×</button></div>
+                  </div>
+                  <button class="add-include">+ Add an inclusion</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pkg featured open">
+            <div class="pkg-head" onclick="togglePkg(this)">
+              <div class="pkg-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 15.09 8.26 22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></div>
+              <div><div class="pkg-name">Heirloom</div><div class="pkg-desc">Full-day wedding · 2 photographers · printed album included</div></div>
+              <div class="pkg-price"><div class="pkg-price-from">Starting</div><div class="pkg-price-amount"><span class="ccy">৳</span>1,85,000</div></div>
+              <div class="pkg-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="pkg-body">
+              <div class="pkg-body-grid">
+                <div>
+                  <div class="field"><label class="field-label">Name</label><input class="input" value="Heirloom"></div>
+                  <div class="field"><label class="field-label">Tagline</label><input class="input" value="Full-day wedding · 2 photographers"></div>
+                  <div class="field-row">
+                    <div class="field"><label class="field-label">Price (৳)</label><input class="input" value="185000"></div>
+                    <div class="field"><label class="field-label">Duration</label><input class="input" value="Full day · 10–12 hrs"></div>
+                  </div>
+                  <div class="toggle-row"><div class="toggle-label"><span class="ttl">Mark as featured</span><span class="sub">Currently highlighted on packages page</span></div><div class="toggle on" data-toggle></div></div>
+                </div>
+                <div>
+                  <label class="field-label">Includes</label>
+                  <div class="includes-list">
+                    <div class="includes-row"><span class="dot"></span><input value="Two photographers, full day"><button>×</button></div>
+                    <div class="includes-row"><span class="dot"></span><input value="350+ edited photographs"><button>×</button></div>
+                    <div class="includes-row"><span class="dot"></span><input value="Hand-bound 40-page printed album"><button>×</button></div>
+                    <div class="includes-row"><span class="dot"></span><input value="Online private gallery, 5 years"><button>×</button></div>
+                    <div class="includes-row"><span class="dot"></span><input value="Drone coverage (weather permitting)"><button>×</button></div>
+                    <div class="includes-row"><span class="dot"></span><input value="Pre-wedding consultation"><button>×</button></div>
+                  </div>
+                  <button class="add-include">+ Add an inclusion</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pkg">
+            <div class="pkg-head" onclick="togglePkg(this)">
+              <div class="pkg-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/></svg></div>
+              <div><div class="pkg-name">The Engagement</div><div class="pkg-desc">Half-day session · location of your choice · 80 edits</div></div>
+              <div class="pkg-price"><div class="pkg-price-from">Starting</div><div class="pkg-price-amount"><span class="ccy">৳</span>55,000</div></div>
+              <div class="pkg-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="pkg-body"></div>
+          </div>
+
+          <div class="pkg">
+            <div class="pkg-head" onclick="togglePkg(this)">
+              <div class="pkg-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
+              <div><div class="pkg-name">Editorial &amp; Brand</div><div class="pkg-desc">Commercial commissions · bespoke scope</div></div>
+              <div class="pkg-price"><div class="pkg-price-from">From</div><div class="pkg-price-amount"><span class="ccy">৳</span>80,000</div></div>
+              <div class="pkg-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="pkg-body"></div>
+          </div>
+
+          <div class="pkg">
+            <div class="pkg-head" onclick="togglePkg(this)">
+              <div class="pkg-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></div>
+              <div><div class="pkg-name">Bespoke Atelier</div><div class="pkg-desc">Multi-day projects, films, archival prints — let's talk</div></div>
+              <div class="pkg-price"><div class="pkg-price-from">Custom</div><div class="pkg-price-amount" style="font-style: italic; font-family: var(--font-italic);">Enquire</div></div>
+              <div class="pkg-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="pkg-body"></div>
+          </div>
+        </div>
+
+        <div class="save-bar">
+          <div class="save-bar-status"><span class="dot"></span>All changes saved · just now</div>
+          <div class="save-bar-actions">
+            <button class="btn btn-ghost btn-sm">Revert</button>
+            <button class="btn btn-primary btn-sm" data-save>Save changes</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━ TESTIMONIALS ━━━━━━━ -->
+      <section class="section" data-name="testimonials">
+        <div class="sec-head">
+          <div>
+            <span class="sec-num"><span class="roman">VI</span>Voices · 05</span>
+            <h1 class="sec-title">In Their <em>Words</em></h1>
+            <div class="sec-meta">12 testimonials · 4 featured on home page</div>
+          </div>
+          <div class="sec-head-actions"><button class="btn btn-primary btn-sm">+ Add Testimonial</button></div>
+        </div>
+
+        <div class="testi-list">
+          <div class="testi">
+            <span class="testi-quote">"</span>
+            <div class="testi-stars">★ ★ ★ ★ ★</div>
+            <div class="testi-text">Fahim moved through our wedding like he wasn't there, then handed us photographs that felt like memories we had forgotten. The album is the most precious thing we own.</div>
+            <div class="testi-attribute">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80" alt="">
+              <div><div class="testi-name">Anika &amp; Rashid</div><div class="testi-event">Wedding · Cox's Bazar, Feb 2025</div></div>
+            </div>
+            <div class="testi-actions">
+              <button class="btn btn-ghost btn-icon btn-sm">★</button>
+              <button class="btn btn-ghost btn-icon btn-sm">···</button>
+            </div>
+          </div>
+
+          <div class="testi">
+            <span class="testi-quote">"</span>
+            <div class="testi-stars">★ ★ ★ ★ ★</div>
+            <div class="testi-text">We sat with the proofs for an hour without speaking. He sees the small, quiet things between the big moments — and that is what we wanted to remember.</div>
+            <div class="testi-attribute">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80" alt="">
+              <div><div class="testi-name">Sadia Hossain</div><div class="testi-event">Engagement · Sundarbans, Jan 2025</div></div>
+            </div>
+            <div class="testi-actions"><button class="btn btn-ghost btn-icon btn-sm">···</button></div>
+          </div>
+
+          <div class="testi">
+            <span class="testi-quote">"</span>
+            <div class="testi-stars">★ ★ ★ ★ ★</div>
+            <div class="testi-text">Our autumn campaign needed an editorial eye, not a commercial one — and Fahim delivered. The set has a stillness that elevates the entire collection.</div>
+            <div class="testi-attribute">
+              <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80" alt="">
+              <div><div class="testi-name">Karim Studio · Editorial Lead</div><div class="testi-event">Commercial · November 2024</div></div>
+            </div>
+            <div class="testi-actions"><button class="btn btn-ghost btn-icon btn-sm">···</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━ ABOUT ━━━━━━━ -->
+      <section class="section" data-name="about">
+        <div class="sec-head">
+          <div>
+            <span class="sec-num"><span class="roman">VII</span>Profile · 06</span>
+            <h1 class="sec-title">About <em>Yourself</em></h1>
+            <div class="sec-meta">The page that introduces you</div>
+          </div>
+          <div class="sec-head-actions"><button class="btn btn-primary btn-sm" data-save>Save</button></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+            <div class="field-row">
+              <div class="field"><label class="field-label">Display Name</label><input class="input" value="M. R. Fahim"></div>
+              <div class="field"><label class="field-label">Title</label><input class="input" value="Photographer · Storyteller"></div>
+            </div>
+            <div class="field"><label class="field-label">Biography <span class="opt">first person, italic-friendly</span></label><textarea class="textarea" style="min-height: 140px;">I photograph people the way one might write a letter — slowly, attentively, and with a certain reverence for what is being kept. My work lives between weddings, editorial, and the quiet portrait commissions that find me in between.</textarea></div>
+            <div class="field"><label class="field-label">One-line tagline (home page)</label><input class="input" value="A studio for cinematic, hand-edited photography — based in Dhaka."></div>
+            <div class="field-row">
+              <div class="field"><label class="field-label">Email</label><input class="input" value="hello@mrfahim.studio"></div>
+              <div class="field"><label class="field-label">Phone</label><input class="input" value="+880 1700 000 000"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━ GEAR ━━━━━━━ -->
+      <section class="section" data-name="gear">
+        <div class="sec-head">
+          <div>
+            <span class="sec-num"><span class="roman">VIII</span>Toolkit · 07</span>
+            <h1 class="sec-title">Gear &amp; <em>Tools</em></h1>
+            <div class="sec-meta">Shown on the About page as a humble inventory</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+            <div class="gear-group">
+              <div class="gear-group-label">Camera bodies</div>
+              <div class="gear-pills">
+                <span class="gear-pill gold">Sony A7R V <button>×</button></span>
+                <span class="gear-pill">Sony A7 IV <button>×</button></span>
+                <span class="gear-pill">Fujifilm GFX 50S II <button>×</button></span>
+                <span class="gear-pill add"><input placeholder="+ add body"></span>
+              </div>
+            </div>
+            <div class="gear-group">
+              <div class="gear-group-label">Lenses</div>
+              <div class="gear-pills">
+                <span class="gear-pill">Sony 35mm f/1.4 GM <button>×</button></span>
+                <span class="gear-pill">Sony 85mm f/1.4 GM <button>×</button></span>
+                <span class="gear-pill gold">Sony 24-70 f/2.8 GM II <button>×</button></span>
+                <span class="gear-pill">Sigma 105mm f/1.4 <button>×</button></span>
+                <span class="gear-pill add"><input placeholder="+ add lens"></span>
+              </div>
+            </div>
+            <div class="gear-group">
+              <div class="gear-group-label">Lighting &amp; modifiers</div>
+              <div class="gear-pills">
+                <span class="gear-pill">Profoto B10 (×2) <button>×</button></span>
+                <span class="gear-pill">Godox AD600 Pro <button>×</button></span>
+                <span class="gear-pill">5-in-1 reflector kit <button>×</button></span>
+                <span class="gear-pill add"><input placeholder="+ add lighting"></span>
+              </div>
+            </div>
+            <div class="gear-group">
+              <div class="gear-group-label">Software</div>
+              <div class="gear-pills">
+                <span class="gear-pill gold">Capture One Pro 23 <button>×</button></span>
+                <span class="gear-pill">Adobe Lightroom <button>×</button></span>
+                <span class="gear-pill">DxO PureRAW <button>×</button></span>
+                <span class="gear-pill add"><input placeholder="+ add software"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━ EXPERIENCE ━━━━━━━ -->
+      <section class="section" data-name="experience">
+        <div class="sec-head">
+          <div>
+            <span class="sec-num"><span class="roman">IX</span>Timeline · 08</span>
+            <h1 class="sec-title">A Brief <em>History</em></h1>
+            <div class="sec-meta">Career milestones shown on About page</div>
+          </div>
+          <div class="sec-head-actions"><button class="btn btn-primary btn-sm">+ Add Entry</button></div>
+        </div>
+
+        <div class="exp-list">
+          <div class="exp-row">
+            <div class="exp-year">2025</div>
+            <div><div class="exp-title">Featured in <em style="font-family: var(--font-italic); font-style: italic; color: var(--gold);">Vogue India</em> · Weddings issue</div><div class="exp-desc">Selected for the editorial folio of South Asia's emerging wedding photographers.</div></div>
+            <button class="btn btn-ghost btn-icon btn-sm">···</button>
+          </div>
+          <div class="exp-row">
+            <div class="exp-year">2023</div>
+            <div><div class="exp-title">Studio established · Dhaka atelier</div><div class="exp-desc">Founded a dedicated space for editorial, weddings, and archival prints.</div></div>
+            <button class="btn btn-ghost btn-icon btn-sm">···</button>
+          </div>
+          <div class="exp-row">
+            <div class="exp-year">2021</div>
+            <div><div class="exp-title">Group exhibit · Bengal Foundation</div><div class="exp-desc">"The Quiet Hour" — twelve photographers on stillness in modern Bangladesh.</div></div>
+            <button class="btn btn-ghost btn-icon btn-sm">···</button>
+          </div>
+          <div class="exp-row">
+            <div class="exp-year">2019</div>
+            <div><div class="exp-title">First commissioned wedding</div><div class="exp-desc">A two-day affair in Sylhet that became the beginning of the studio.</div></div>
+            <button class="btn btn-ghost btn-icon btn-sm">···</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━ CONTACT ━━━━━━━ -->
+      <section class="section" data-name="contact">
+        <div class="sec-head">
+          <div>
+            <span class="sec-num"><span class="roman">X</span>Reach me · 09</span>
+            <h1 class="sec-title">Contact <em>Details</em></h1>
+          </div>
+          <div class="sec-head-actions"><button class="btn btn-primary btn-sm" data-save>Save</button></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+            <div class="field-row">
+              <div class="field"><label class="field-label">Studio Address</label><input class="input" value="House 12, Road 8, Banani · Dhaka"></div>
+              <div class="field"><label class="field-label">By appointment</label><input class="input" value="Tuesday–Saturday, 11am–7pm"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label class="field-label">Instagram</label><input class="input" value="@mrfahim.studio"></div>
+              <div class="field"><label class="field-label">Pinterest</label><input class="input" value="mrfahimstudio"></div>
+            </div>
+            <div class="field"><label class="field-label">WhatsApp business</label><input class="input" value="+880 1700 000 000"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━ INQUIRIES ━━━━━━━ -->
+      <section class="section" data-name="inquiries">
+        <div class="sec-head">
+          <div>
+            <span class="sec-num"><span class="roman">II</span>Inbox · 01</span>
+            <h1 class="sec-title">Awaiting <em>Reply</em></h1>
+            <div class="sec-meta">7 open · 2 marked urgent · oldest 4 days</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-body flush">
+            <div class="inquiry">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80" class="inq-avatar" alt="">
+              <div class="inq-main"><div class="inq-name">Anika Rahman</div><div class="inq-msg">"We're getting married in December and absolutely loved your Sunset album…"</div></div>
+              <span class="inq-tag">Wedding</span><div class="inq-time">2h ago</div>
+            </div>
+            <div class="inquiry">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80" class="inq-avatar" alt="">
+              <div class="inq-main"><div class="inq-name">Sadia &amp; Tahmid</div><div class="inq-msg">"Engagement session in Sundarbans, weekend of the 22nd — is that available?"</div></div>
+              <span class="inq-tag warm">Engagement</span><div class="inq-time">6h ago</div>
+            </div>
+            <div class="inquiry">
+              <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80" class="inq-avatar" alt="">
+              <div class="inq-main"><div class="inq-name">Karim Studio</div><div class="inq-msg">"Editorial collaboration for our autumn collection. Brief attached."</div></div>
+              <span class="inq-tag cool">Editorial</span><div class="inq-time">Yesterday</div>
+            </div>
+            <div class="inquiry">
+              <img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=80" class="inq-avatar" alt="">
+              <div class="inq-main"><div class="inq-name">Nusrat Jahan</div><div class="inq-msg">"My parents' 40th anniversary — family portraits, intimate gathering."</div></div>
+              <span class="inq-tag">Portrait</span><div class="inq-time">2 days</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
+  </main>
+</div>
 
-    <!-- Toast -->
-    <div class="adm-toast" id="adm-toast"></div>
+<!-- Command palette -->
+<div class="cmd-overlay" id="cmd-overlay">
+  <div class="cmd-box">
+    <div class="cmd-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A661" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" placeholder="Search albums, packages, inquiries…" id="cmd-input">
+      <kbd style="background: var(--surface-2); border: 1px solid var(--hairline); border-radius: 3px; padding: 0.15rem 0.4rem; font-size: 0.7rem; color: var(--text-3);">Esc</kbd>
+    </div>
+    <div class="cmd-list" id="cmd-list"></div>
+  </div>
+</div>
 
-    <script>
-        (function () {
-            var THEME_KEY = 'mrf-theme';
-            var body = document.body;
-            /* Restore saved theme instantly */
-            if (localStorage.getItem(THEME_KEY) === 'dark') body.setAttribute('data-theme', 'dark');
-            document.addEventListener('DOMContentLoaded', function () {
-                var btn = document.getElementById('adm-theme-btn');
-                if (!btn) return;
-                btn.addEventListener('click', function () {
-                    var next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                    body.setAttribute('data-theme', next);
-                    localStorage.setItem(THEME_KEY, next);
-                });
-            });
-        })();
-    </script>
-    <script src="js/cms.js"></script>
-    <script src="js/admin.js"></script>
+<!-- Tweaks -->
+<button class="tweaks-fab" id="tweaks-fab" title="Tweaks">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+</button>
+
+<div class="tweaks-panel" id="tweaks-panel">
+  <div class="tweaks-head">
+    <h4>Tweaks</h4>
+    <button class="btn btn-ghost btn-icon btn-sm" id="tweaks-close">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="tweaks-body">
+    <div class="tweak-group">
+      <div class="tweak-group-label">Accent</div>
+      <div class="tweak-row" id="accent-row">
+        <div class="tweak-swatch active" data-accent="#C9A661" style="background: #C9A661;" title="Brass"></div>
+        <div class="tweak-swatch" data-accent="#B87333" style="background: #B87333;" title="Copper"></div>
+        <div class="tweak-swatch" data-accent="#E8DCC0" style="background: #E8DCC0;" title="Ivory"></div>
+        <div class="tweak-swatch" data-accent="#9C7B4A" style="background: #9C7B4A;" title="Bronze"></div>
+        <div class="tweak-swatch" data-accent="#A87C5F" style="background: #A87C5F;" title="Terracotta"></div>
+      </div>
+    </div>
+    <div class="tweak-group">
+      <div class="tweak-group-label">Theme</div>
+      <div class="tweak-seg" id="theme-seg">
+        <button class="active" data-theme-set="dark">Dark</button>
+        <button data-theme-set="light">Light</button>
+      </div>
+    </div>
+    <div class="tweak-group">
+      <div class="tweak-group-label">Density</div>
+      <div class="tweak-seg" id="density-seg">
+        <button class="active" data-density-set="comfortable">Comfortable</button>
+        <button data-density-set="compact">Compact</button>
+      </div>
+    </div>
+    <div class="tweak-group">
+      <div class="tweak-group-label">Serif intensity</div>
+      <div class="tweak-seg" id="serif-seg">
+        <button data-serif-set="subtle">Subtle</button>
+        <button class="active" data-serif-set="balanced">Balanced</button>
+        <button data-serif-set="dramatic">Dramatic</button>
+      </div>
+    </div>
+    <div class="tweak-group">
+      <div class="tweak-group-label">Film grain</div>
+      <div class="tweak-seg" id="grain-seg">
+        <button class="active" data-grain-set="on">On</button>
+        <button data-grain-set="off">Off</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <div class="toast-msg" id="toast-msg"><b>Saved</b><em>All changes captured.</em></div>
+</div>
+
+<script src="js/cms.js"></script>
+<script src="js/admin.js"></script>
 </body>
 </html>
