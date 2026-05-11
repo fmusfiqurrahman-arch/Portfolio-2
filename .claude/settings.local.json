@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem \"d:\\\\Projects\\\\Portfolio_1\\\\Gpt Suggested virsion 2\" -Recurse -Depth 2)",
+      "Bash(Select-Object FullName, Length)",
+      "Bash(Format-Table -AutoSize)"
+    ]
+  }
+}

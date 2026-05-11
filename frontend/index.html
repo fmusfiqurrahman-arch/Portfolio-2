@@ -25,12 +25,24 @@
         })();
     </script>
 
+    <!-- Backend API URL — change to your deployed URL in production -->
+    <script>window.MRF_API_URL = 'http://localhost:3000';</script>
+
+    <!-- Custom cursor (desktop only) -->
+    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+
+    <!-- Film grain overlay -->
+    <div class="noise-overlay" aria-hidden="true"></div>
+
     <!-- Preloader -->
     <div class="preloader" id="preloader">
         <div class="preloader-content">
             <div class="preloader-logo">
                 <span class="preloader-initials">MRF</span>
                 <div class="preloader-line"></div>
+                <div class="preloader-bar"></div>
+                <p class="preloader-counter" id="preloader-counter">Loading…</p>
             </div>
         </div>
     </div>
@@ -829,7 +841,7 @@
                     <li>Create your event types</li>
                     <li>Paste your embed code here</li>
                 </ol>
-                <a href="https://calendly.com" target="_blank" class="btn btn-primary">Set Up Calendly</a>
+                <a href="https://calendly.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Set Up Calendly</a>
             </div>
         </div>
     </div>

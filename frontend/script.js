@@ -603,14 +603,40 @@
             if (successEl) successEl.classList.remove('visible');
             if (errorEl)   errorEl.classList.remove('visible');
 
-            setTimeout(function () {
+            var apiUrl = (window.MRF_API_URL || '') + '/api/contact';
+            var service = document.getElementById('selected-service');
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name:    nameInput.value.trim(),
+                    email:   emailInput.value.trim(),
+                    message: messageInput.value.trim(),
+                    service: service ? service.textContent : ''
+                })
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
                 submitBtn.classList.remove('loading');
-                if (successEl) successEl.classList.add('visible');
-                contactForm.reset();
-                [nameInput, emailInput, messageInput].forEach(function (inp) {
-                    if (inp) inp.classList.remove('invalid');
-                });
-            }, 1800);
+                if (data.success) {
+                    if (successEl) successEl.classList.add('visible');
+                    contactForm.reset();
+                    [nameInput, emailInput, messageInput].forEach(function (inp) {
+                        if (inp) inp.classList.remove('invalid');
+                    });
+                } else {
+                    if (errorEl) {
+                        var errSpan = errorEl.querySelector('span');
+                        if (errSpan) errSpan.textContent = data.message || 'Something went wrong.';
+                        errorEl.classList.add('visible');
+                    }
+                }
+            })
+            .catch(function () {
+                submitBtn.classList.remove('loading');
+                if (errorEl) errorEl.classList.add('visible');
+            });
         });
     }
 
@@ -971,4 +997,75 @@
         });
     }
 
+})();
+
+/* ─────────────────────────────────────────
+   CUSTOM CURSOR — desktop pointer devices only
+───────────────────────────────────────── */
+(function () {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+
+    var dot  = document.getElementById('cursor-dot');
+    var ring = document.getElementById('cursor-ring');
+    if (!dot || !ring) return;
+
+    var mouseX = -100, mouseY = -100;
+    var ringX  = -100, ringY  = -100;
+    var raf;
+
+    document.addEventListener('mousemove', function (e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        dot.style.transform = 'translate(' + (mouseX - 3) + 'px,' + (mouseY - 3) + 'px)';
+    });
+
+    function animateRing() {
+        ringX += (mouseX - ringX) * 0.1;
+        ringY += (mouseY - ringY) * 0.1;
+        ring.style.transform = 'translate(' + (ringX - 17) + 'px,' + (ringY - 17) + 'px)';
+        raf = requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    var hoverSel = 'a,button,.btn,.portfolio-item,.filter-btn,.package-card,.testimonial-btn,.slider-btn,.gallery-folder-card,.gallery-photo-item';
+
+    function addHover(el) {
+        el.addEventListener('mouseenter', function () { document.body.classList.add('cursor-hover'); });
+        el.addEventListener('mouseleave', function () { document.body.classList.remove('cursor-hover'); });
+        el.addEventListener('mousedown',  function () { document.body.classList.add('cursor-active'); });
+        el.addEventListener('mouseup',    function () { document.body.classList.remove('cursor-active'); });
+    }
+
+    document.querySelectorAll(hoverSel).forEach(addHover);
+
+    /* MutationObserver picks up dynamically added gallery cards */
+    if ('MutationObserver' in window) {
+        new MutationObserver(function (mutations) {
+            mutations.forEach(function (m) {
+                m.addedNodes.forEach(function (node) {
+                    if (node.nodeType !== 1) return;
+                    if (node.matches && node.matches(hoverSel)) addHover(node);
+                    node.querySelectorAll && node.querySelectorAll(hoverSel).forEach(addHover);
+                });
+            });
+        }).observe(document.body, { childList: true, subtree: true });
+    }
+
+    document.addEventListener('mouseleave', function () { document.body.classList.add('cursor-hidden'); });
+    document.addEventListener('mouseenter', function () { document.body.classList.remove('cursor-hidden'); });
+
+    /* Preloader counter — counts 0→100 while page loads */
+    var counter = document.getElementById('preloader-counter');
+    if (counter) {
+        var pct = 0;
+        var pInterval = setInterval(function () {
+            pct = Math.min(pct + Math.floor(Math.random() * 14 + 4), 99);
+            counter.textContent = pct + '%';
+            if (pct >= 99) clearInterval(pInterval);
+        }, 80);
+        window.addEventListener('load', function () {
+            clearInterval(pInterval);
+            counter.textContent = '100%';
+        });
+    }
 })();
