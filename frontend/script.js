@@ -406,12 +406,63 @@
 
     portfolioItems.forEach(function (item) {
         item.addEventListener('click', function () {
-            lightboxItems = Array.from(document.querySelectorAll('.portfolio-item:not([style*="display: none"])'));
-            if (!lightboxItems.length) lightboxItems = Array.from(portfolioItems);
-            lightboxIndex = lightboxItems.indexOf(item);
-            openLightbox(lightboxIndex);
+            var albumId  = item.getAttribute('data-album-id');
+            var category = item.getAttribute('data-category');
+            var album    = PORTFOLIO_ALBUMS.find(function (a) { return a.id === albumId; });
+            var folder   = GALLERY_DATA.find(function (f) { return f.id === category; });
+            if (!album || !folder) return;
+            if (!gFoldersBuilt) { gBuildFolders(); gFoldersBuilt = true; }
+            gModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            /* Open gallery filtered to just this album's photos */
+            gOpenFolder({ id: album.id, label: album.title, photos: album.images });
         });
     });
+
+    /* ─────────────────────────────────────────
+       PORTFOLIO THUMBNAIL ROTATION
+       Each grid item cycles through its album's
+       images randomly so the grid feels alive.
+    ───────────────────────────────────────── */
+    function startPortfolioRotation() {
+        var FADE_MS    = 1400;   /* fade-out + fade-in duration */
+        var HOLD_MIN   = 6000;   /* minimum time each image is held */
+        var HOLD_RANGE = 4000;   /* adds 0–4 s of extra random hold */
+
+        portfolioItems.forEach(function (item) {
+            var albumId = item.getAttribute('data-album-id');
+            if (!albumId) return;
+            var album = PORTFOLIO_ALBUMS.find(function (a) { return a.id === albumId; });
+            if (!album || album.images.length < 2) return;
+
+            var img = item.querySelector('img');
+            var idx = 0;
+
+            img.style.transition = 'opacity ' + (FADE_MS / 1000) + 's ease-in-out, ' +
+                                   'filter 0.6s ease, transform 0.7s cubic-bezier(0.4,0,0.2,1)';
+
+            function swapNext() {
+                idx = (idx + 1) % album.images.length;
+
+                /* fade out */
+                img.style.opacity = '0';
+
+                /* swap src after fade completes, then fade back in */
+                setTimeout(function () {
+                    img.src = album.images[idx].thumb;
+                    img.onload = function () { img.style.opacity = '1'; };
+                    if (img.complete) img.style.opacity = '1';
+                }, FADE_MS);
+
+                /* schedule the next swap */
+                setTimeout(swapNext, FADE_MS + HOLD_MIN + Math.floor(Math.random() * HOLD_RANGE));
+            }
+
+            /* stagger each item's first swap so they don't all fire together */
+            var firstDelay = HOLD_MIN + Math.floor(Math.random() * HOLD_RANGE);
+            setTimeout(swapNext, firstDelay);
+        });
+    }
 
     function openLightbox(i) {
         if (!lightbox || !lightboxItems[i]) return;
@@ -565,58 +616,110 @@
 
     /* ─────────────────────────────────────────
        FULL GALLERY — Folders → Photos → Viewer
+       PORTFOLIO_ALBUMS is the single source of
+       truth. GALLERY_DATA is built from it so
+       the gallery folders always stay in sync.
     ───────────────────────────────────────── */
-    var GALLERY_DATA = [
-        {
-            id: 'wedding', label: 'Weddings',
-            cover: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80',
-            photos: [
-                { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80', title: 'First Look' },
-                { src: 'https://images.unsplash.com/photo-1606216794079-c8f53a0f7b9e?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1606216794079-c8f53a0f7b9e?w=400&q=80', title: 'Ceremony' },
-                { src: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80', title: 'Vows' },
-                { src: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400&q=80', title: 'Romantic Ceremony' },
-                { src: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&q=80', title: 'Destination Wedding' },
-                { src: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&q=80', title: 'Cinematic Moment' },
-                { src: 'https://images.unsplash.com/photo-1511285560929-80b456503681?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1511285560929-80b456503681?w=400&q=80', title: 'First Dance' },
-                { src: 'https://images.unsplash.com/photo-1520854221256-17538702c0cc?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1520854221256-17538702c0cc?w=400&q=80', title: 'Detail Shots' }
-            ]
+    var PORTFOLIO_ALBUMS = [
+        /* ── Weddings ─────────────────────── */
+        { id: 'elegant-wedding',    category: 'wedding',    title: 'Elegant Wedding',
+          images: [
+            { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80', title: 'First Look' },
+            { src: 'https://images.unsplash.com/photo-1606216794079-c8f53a0f7b9e?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1606216794079-c8f53a0f7b9e?w=400&q=80', title: 'Ceremony' },
+            { src: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80', title: 'Vows' },
+            { src: 'https://images.unsplash.com/photo-1511285560929-80b456503681?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1511285560929-80b456503681?w=400&q=80', title: 'First Dance' }
+          ]
         },
-        {
-            id: 'portrait', label: 'Portraits',
-            cover: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80',
-            photos: [
-                { src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80', title: 'Executive Portrait' },
-                { src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80', title: 'Personal Branding' },
-                { src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80', title: 'Professional Headshot' },
-                { src: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80', title: 'Natural Light Portrait' },
-                { src: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80', title: 'Casual Portrait' },
-                { src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80', title: 'Lifestyle Session' }
-            ]
+        { id: 'romantic-ceremony',  category: 'wedding',    title: 'Romantic Ceremony',
+          images: [
+            { src: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400&q=80', title: 'Together' },
+            { src: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&q=80', title: 'Cinematic Moment' },
+            { src: 'https://images.unsplash.com/photo-1520854221256-17538702c0cc?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1520854221256-17538702c0cc?w=400&q=80', title: 'Detail Shots' },
+            { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80', title: 'The Walk' }
+          ]
         },
-        {
-            id: 'editorial', label: 'Editorial',
-            cover: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80',
-            photos: [
-                { src: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&q=80', title: 'Fashion Editorial' },
-                { src: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&q=80', title: 'Magazine Spread' },
-                { src: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&q=80', title: 'Runway Story' },
-                { src: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80', title: 'Conceptual Shoot' },
-                { src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80', title: 'Editorial Portrait' },
-                { src: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&q=80', title: 'High Fashion' }
-            ]
+        { id: 'destination-wedding', category: 'wedding',   title: 'Destination Wedding',
+          images: [
+            { src: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&q=80', title: 'Outdoor Ceremony' },
+            { src: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80', title: 'Bride' },
+            { src: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&q=80', title: 'Golden Hour' },
+            { src: 'https://images.unsplash.com/photo-1606216794079-c8f53a0f7b9e?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1606216794079-c8f53a0f7b9e?w=400&q=80', title: 'Vows' }
+          ]
         },
-        {
-            id: 'commercial', label: 'Commercial',
-            cover: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=80',
-            photos: [
-                { src: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&q=80', title: 'Brand Campaign' },
-                { src: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=400&q=80', title: 'Product Photography' },
-                { src: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=400&q=80', title: 'Corporate Identity' },
-                { src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=80', title: 'Retail Campaign' },
-                { src: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&q=80', title: 'Team & Culture' }
-            ]
+        /* ── Portraits ─────────────────────── */
+        { id: 'creative-portrait',  category: 'portrait',   title: 'Creative Portrait',
+          images: [
+            { src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80', title: 'Natural Light' },
+            { src: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80', title: 'Candid' },
+            { src: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80', title: 'Lifestyle' },
+            { src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80', title: 'Portrait' }
+          ]
+        },
+        { id: 'personal-branding',  category: 'portrait',   title: 'Personal Branding',
+          images: [
+            { src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80', title: 'Professional' },
+            { src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80', title: 'Headshot' },
+            { src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80', title: 'Studio' },
+            { src: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80', title: 'Casual' }
+          ]
+        },
+        { id: 'executive-portrait', category: 'portrait',   title: 'Executive Portrait',
+          images: [
+            { src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80', title: 'Executive' },
+            { src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80', title: 'Corporate' },
+            { src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80', title: 'Director' },
+            { src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80', title: 'Leadership' }
+          ]
+        },
+        /* ── Editorial ─────────────────────── */
+        { id: 'fashion-editorial',  category: 'editorial',  title: 'Fashion Editorial',
+          images: [
+            { src: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&q=80', title: 'Editorial' },
+            { src: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&q=80', title: 'Runway' },
+            { src: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80', title: 'High Fashion' },
+            { src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80', title: 'Portrait' }
+          ]
+        },
+        { id: 'magazine-editorial', category: 'editorial',  title: 'Magazine Editorial',
+          images: [
+            { src: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&q=80', title: 'Magazine' },
+            { src: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&q=80', title: 'Couture' },
+            { src: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&q=80', title: 'Spread' },
+            { src: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&q=80', title: 'Cover Story' }
+          ]
+        },
+        /* ── Commercial ────────────────────── */
+        { id: 'brand-campaign',     category: 'commercial', title: 'Brand Campaign',
+          images: [
+            { src: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&q=80', title: 'Brand Campaign' },
+            { src: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=400&q=80', title: 'Product' },
+            { src: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=400&q=80', title: 'Corporate' },
+            { src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=80', title: 'Retail' },
+            { src: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=90', thumb: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&q=80', title: 'Team' }
+          ]
         }
     ];
+
+    /* Build gallery category folders by aggregating all albums per category */
+    var GALLERY_CAT_META = {
+        wedding:    { label: 'Weddings'   },
+        portrait:   { label: 'Portraits'  },
+        editorial:  { label: 'Editorial'  },
+        commercial: { label: 'Commercial' }
+    };
+    var GALLERY_DATA = ['wedding', 'portrait', 'editorial', 'commercial'].map(function (catId) {
+        var albums = PORTFOLIO_ALBUMS.filter(function (a) { return a.category === catId; });
+        var photos = [];
+        albums.forEach(function (a) { photos = photos.concat(a.images); });
+        return {
+            id:     catId,
+            label:  GALLERY_CAT_META[catId].label,
+            cover:  photos.length ? photos[0].thumb : '',
+            photos: photos
+        };
+    });
+
+    startPortfolioRotation();
 
     var gModal         = document.getElementById('gallery-modal');
     var gFoldersView   = document.getElementById('gallery-folders-view');
@@ -760,6 +863,24 @@
 
     var galleryBtn = document.getElementById('portfolio-gallery-btn');
     if (galleryBtn) galleryBtn.addEventListener('click', gOpenModal);
+
+    /* Sections with data-open-album — open ONLY that album's images, no folder list */
+    document.querySelectorAll('[data-open-album]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            var albumId = el.getAttribute('data-open-album');
+            var album   = PORTFOLIO_ALBUMS.find(function (a) { return a.id === albumId; });
+            if (!album) return;
+            if (!gFoldersBuilt) { gBuildFolders(); gFoldersBuilt = true; }
+            gModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            /* Open photo grid for this album only */
+            gOpenFolder({ id: album.id, label: album.title, photos: album.images });
+            /* Override back button: return to page, not to folder list */
+            gBackBtn.onclick = gCloseModal;
+            if (gBackLabel) gBackLabel.textContent = 'Back to Page';
+        });
+    });
 
     /* ─────────────────────────────────────────
        SMOOTH SCROLL
