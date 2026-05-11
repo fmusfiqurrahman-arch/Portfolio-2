@@ -745,6 +745,50 @@
         };
     });
 
+    /* ── All: every photo from every album ── */
+    var allPhotos = [];
+    PORTFOLIO_ALBUMS.forEach(function (a) { allPhotos = allPhotos.concat(a.images); });
+    GALLERY_DATA.unshift({ id: 'all', label: 'All', cover: allPhotos[0] ? allPhotos[0].thumb : '', photos: allPhotos });
+
+    /* ── Favorites: admin-curated, stored in CMS ── */
+    var cmsData       = window.MRF_CMS && window.MRF_CMS.data;
+    var favPhotos     = (cmsData && Array.isArray(cmsData.favorites)) ? cmsData.favorites : [];
+    var favoritesFolder = { id: 'favorites', label: 'Favorites', cover: favPhotos[0] ? favPhotos[0].thumb : '', photos: favPhotos };
+    GALLERY_DATA.push(favoritesFolder);
+
+    /* ── Favorites helpers ── */
+    var IS_ADMIN = localStorage.getItem('mrf_admin') === '1';
+
+    function isFav(photo) {
+        return favoritesFolder.photos.some(function (f) { return f.src === photo.src; });
+    }
+
+    function toggleFav(photo, btn) {
+        var idx = favoritesFolder.photos.findIndex(function (f) { return f.src === photo.src; });
+        if (idx > -1) {
+            favoritesFolder.photos.splice(idx, 1);
+            btn.classList.remove('fav-active');
+            btn.setAttribute('aria-label', 'Add to favorites');
+        } else {
+            favoritesFolder.photos.push({ src: photo.src, thumb: photo.thumb, title: photo.title });
+            btn.classList.add('fav-active');
+            btn.setAttribute('aria-label', 'Remove from favorites');
+        }
+        favoritesFolder.cover = favoritesFolder.photos[0] ? favoritesFolder.photos[0].thumb : '';
+        if (cmsData) {
+            cmsData.favorites = favoritesFolder.photos;
+            window.MRF_CMS.save(cmsData);
+        }
+        /* Update folder card count live */
+        var favCard = gFoldersView ? gFoldersView.querySelector('[data-folder-id="favorites"]') : null;
+        if (favCard) {
+            var countEl = favCard.querySelector('.gallery-folder-count');
+            if (countEl) countEl.textContent = favoritesFolder.photos.length + ' photos';
+            var imgEl = favCard.querySelector('img');
+            if (imgEl && favoritesFolder.cover) imgEl.src = favoritesFolder.cover;
+        }
+    }
+
     startPortfolioRotation();
 
     var gModal         = document.getElementById('gallery-modal');
@@ -795,8 +839,12 @@
         GALLERY_DATA.forEach(function (folder) {
             var card = document.createElement('div');
             card.className = 'gallery-folder-card';
+            card.setAttribute('data-folder-id', folder.id);
+            if (folder.id === 'favorites') card.classList.add('gallery-folder-favorites');
+            if (folder.id === 'all')       card.classList.add('gallery-folder-all');
+            var coverSrc = folder.cover || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>';
             card.innerHTML =
-                '<img src="' + folder.cover + '" alt="' + folder.label + '" loading="lazy">' +
+                '<img src="' + coverSrc + '" alt="' + folder.label + '" loading="lazy">' +
                 '<div class="gallery-folder-overlay">' +
                     '<h3 class="gallery-folder-label">' + folder.label + '</h3>' +
                     '<span class="gallery-folder-count">' + folder.photos.length + ' photos</span>' +
@@ -820,12 +868,41 @@
 
     function gBuildPhotos(folder) {
         gPhotosView.innerHTML = '';
+
+        if (folder.photos.length === 0) {
+            var empty = document.createElement('div');
+            empty.className = 'gallery-empty-state';
+            empty.innerHTML =
+                '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+                '<p>No favorites yet.</p>' +
+                (IS_ADMIN ? '<span>Hover any photo and tap the heart to add it here.</span>' : '');
+            gPhotosView.appendChild(empty);
+            return;
+        }
+
         folder.photos.forEach(function (photo, i) {
             var item = document.createElement('div');
             item.className = 'gallery-photo-item';
+            var favd = isFav(photo);
+            var heartHtml = IS_ADMIN
+                ? '<button class="gallery-heart-btn' + (favd ? ' fav-active' : '') + '" aria-label="' + (favd ? 'Remove from favorites' : 'Add to favorites') + '">' +
+                  '<svg width="15" height="15" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="' + (favd ? 'currentColor' : 'none') + '"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+                  '</button>'
+                : '';
             item.innerHTML =
                 '<img src="' + photo.thumb + '" alt="' + photo.title + '" loading="lazy">' +
-                '<div class="gallery-photo-overlay"><span>' + photo.title + '</span></div>';
+                '<div class="gallery-photo-overlay"><span>' + photo.title + '</span></div>' +
+                heartHtml;
+            if (IS_ADMIN) {
+                var hBtn = item.querySelector('.gallery-heart-btn');
+                hBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    toggleFav(photo, hBtn);
+                    /* update the SVG fill live */
+                    var svg = hBtn.querySelector('svg');
+                    if (svg) svg.setAttribute('fill', hBtn.classList.contains('fav-active') ? 'currentColor' : 'none');
+                });
+            }
             item.addEventListener('click', function () { gOpenViewer(i); });
             gPhotosView.appendChild(item);
         });
@@ -999,73 +1076,4 @@
 
 })();
 
-/* ─────────────────────────────────────────
-   CUSTOM CURSOR — desktop pointer devices only
-───────────────────────────────────────── */
-(function () {
-    if (!window.matchMedia('(pointer: fine)').matches) return;
 
-    var dot  = document.getElementById('cursor-dot');
-    var ring = document.getElementById('cursor-ring');
-    if (!dot || !ring) return;
-
-    var mouseX = -100, mouseY = -100;
-    var ringX  = -100, ringY  = -100;
-    var raf;
-
-    document.addEventListener('mousemove', function (e) {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        dot.style.transform = 'translate(' + (mouseX - 3) + 'px,' + (mouseY - 3) + 'px)';
-    });
-
-    function animateRing() {
-        ringX += (mouseX - ringX) * 0.1;
-        ringY += (mouseY - ringY) * 0.1;
-        ring.style.transform = 'translate(' + (ringX - 17) + 'px,' + (ringY - 17) + 'px)';
-        raf = requestAnimationFrame(animateRing);
-    }
-    animateRing();
-
-    var hoverSel = 'a,button,.btn,.portfolio-item,.filter-btn,.package-card,.testimonial-btn,.slider-btn,.gallery-folder-card,.gallery-photo-item';
-
-    function addHover(el) {
-        el.addEventListener('mouseenter', function () { document.body.classList.add('cursor-hover'); });
-        el.addEventListener('mouseleave', function () { document.body.classList.remove('cursor-hover'); });
-        el.addEventListener('mousedown',  function () { document.body.classList.add('cursor-active'); });
-        el.addEventListener('mouseup',    function () { document.body.classList.remove('cursor-active'); });
-    }
-
-    document.querySelectorAll(hoverSel).forEach(addHover);
-
-    /* MutationObserver picks up dynamically added gallery cards */
-    if ('MutationObserver' in window) {
-        new MutationObserver(function (mutations) {
-            mutations.forEach(function (m) {
-                m.addedNodes.forEach(function (node) {
-                    if (node.nodeType !== 1) return;
-                    if (node.matches && node.matches(hoverSel)) addHover(node);
-                    node.querySelectorAll && node.querySelectorAll(hoverSel).forEach(addHover);
-                });
-            });
-        }).observe(document.body, { childList: true, subtree: true });
-    }
-
-    document.addEventListener('mouseleave', function () { document.body.classList.add('cursor-hidden'); });
-    document.addEventListener('mouseenter', function () { document.body.classList.remove('cursor-hidden'); });
-
-    /* Preloader counter — counts 0→100 while page loads */
-    var counter = document.getElementById('preloader-counter');
-    if (counter) {
-        var pct = 0;
-        var pInterval = setInterval(function () {
-            pct = Math.min(pct + Math.floor(Math.random() * 14 + 4), 99);
-            counter.textContent = pct + '%';
-            if (pct >= 99) clearInterval(pInterval);
-        }, 80);
-        window.addEventListener('load', function () {
-            clearInterval(pInterval);
-            counter.textContent = '100%';
-        });
-    }
-})();

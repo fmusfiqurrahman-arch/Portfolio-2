@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — MRF Photography</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            background: #080808;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            padding: 2rem;
+        }
+
+        .login-wrap {
+            width: min(400px, 100%);
+            animation: fadeUp .6s cubic-bezier(.16,1,.3,1) forwards;
+            opacity: 0;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-brand {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .login-brand-initials {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: #C9A661;
+            letter-spacing: .18em;
+            display: block;
+            margin-bottom: .5rem;
+        }
+        .login-brand-line {
+            width: 32px;
+            height: 1px;
+            background: #C9A661;
+            opacity: .4;
+            margin: 0 auto .75rem;
+        }
+        .login-brand-sub {
+            font-size: .65rem;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: #504C48;
+        }
+
+        .login-card {
+            background: #0e0e0e;
+            border: 1px solid #1e1e1e;
+            padding: 2.75rem 2.5rem 2.5rem;
+        }
+
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.65rem;
+            font-weight: 400;
+            color: #E8E2D9;
+            margin-bottom: .5rem;
+            line-height: 1.2;
+        }
+        .login-subtitle {
+            font-size: .8rem;
+            color: #504C48;
+            margin-bottom: 2.25rem;
+            letter-spacing: .02em;
+        }
+
+        .field { margin-bottom: 1rem; }
+        .field label {
+            display: block;
+            font-size: .68rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #504C48;
+            margin-bottom: .5rem;
+        }
+        .field input {
+            width: 100%;
+            background: #080808;
+            border: 1px solid #1e1e1e;
+            color: #E8E2D9;
+            padding: .85rem 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: .9rem;
+            outline: none;
+            transition: border-color .2s ease;
+        }
+        .field input:focus { border-color: #C9A661; }
+        .field input::placeholder { color: #2e2e2e; }
+
+        .login-error {
+            font-size: .78rem;
+            color: #c97070;
+            margin-bottom: 1rem;
+            display: none;
+            letter-spacing: .02em;
+        }
+        .login-error.visible { display: block; }
+
+        .login-btn {
+            width: 100%;
+            padding: .95rem;
+            background: #C9A661;
+            color: #080808;
+            font-family: 'Inter', sans-serif;
+            font-size: .72rem;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            margin-top: .5rem;
+            transition: background .2s ease;
+        }
+        .login-btn:hover { background: #A8883F; }
+        .login-btn:active { background: #96782E; }
+
+        .login-back {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            margin-top: 1.75rem;
+            font-size: .75rem;
+            color: #504C48;
+            text-decoration: none;
+            letter-spacing: .06em;
+            transition: color .2s ease;
+        }
+        .login-back:hover { color: #C9A661; }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrap">
+        <div class="login-brand">
+            <span class="login-brand-initials">MRF</span>
+            <div class="login-brand-line"></div>
+            <span class="login-brand-sub">Photography</span>
+        </div>
+
+        <div class="login-card">
+            <h1 class="login-title">Admin Login</h1>
+            <p class="login-subtitle">Restricted access — authorised personnel only</p>
+
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter username" autocomplete="username">
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password" autocomplete="current-password">
+            </div>
+
+            <p class="login-error" id="login-error">Incorrect username or password.</p>
+
+            <button type="button" class="login-btn" id="login-btn">Enter</button>
+        </div>
+
+        <a href="index.html" class="login-back">← Back to portfolio</a>
+    </div>
+
+    <script>
+        var ADMIN_USER  = 'admin';
+        var ADMIN_PASS  = 'MRF@2024';
+        var SESSION_KEY = 'mrf_admin';
+
+        /* Already logged in — go straight to admin */
+        if (localStorage.getItem(SESSION_KEY) === '1') {
+            window.location.replace('admin.html');
+        }
+
+        var userInp  = document.getElementById('username');
+        var passInp  = document.getElementById('password');
+        var loginBtn = document.getElementById('login-btn');
+        var errorEl  = document.getElementById('login-error');
+
+        function attempt() {
+            errorEl.classList.remove('visible');
+            if (userInp.value.trim() === ADMIN_USER && passInp.value === ADMIN_PASS) {
+                localStorage.setItem(SESSION_KEY, '1');
+                window.location.replace('index.html');
+            } else {
+                errorEl.classList.add('visible');
+                passInp.value = '';
+                passInp.focus();
+            }
+        }
+
+        loginBtn.addEventListener('click', attempt);
+        [userInp, passInp].forEach(function (inp) {
+            inp.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') attempt();
+            });
+        });
+
+        /* Focus username on load */
+        userInp.focus();
+    </script>
+
+</body>
+</html>

@@ -48,7 +48,8 @@
         ],
         portfolioAlbums: null,
         testimonials:    null,
-        packages:        null
+        packages:        null,
+        favorites:       []
     };
 
     /* Deep-merge saved data over defaults */

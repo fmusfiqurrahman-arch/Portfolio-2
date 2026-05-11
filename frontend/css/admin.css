@@ -138,6 +138,10 @@ html, body {
 .adm-sidebar-brand {
     padding: 1.5rem 1.25rem 1.2rem;
     border-bottom: 1px solid var(--dark-3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
 }
 
 .adm-sidebar-brand-name {
@@ -841,6 +845,103 @@ html, body {
 .adm-sidebar::-webkit-scrollbar-thumb  { background: var(--dark-3); border-radius: 4px; }
 .adm-content::-webkit-scrollbar-track  { background: transparent; }
 .adm-content::-webkit-scrollbar-thumb  { background: #ccc; border-radius: 4px; }
+
+/* ── Dark Mode — content area overrides ── */
+[data-theme="dark"] {
+    --bg:         #0f0f0f;
+    --surface:    #1a1a1a;
+    --border:     #2e2e2e;
+    --text:       #e0dbd4;
+    --text-muted: #999590;
+    --shadow:     0 2px 12px rgba(0,0,0,0.5);
+}
+[data-theme="dark"] body { background: var(--bg); color: var(--text); }
+
+/* Inputs & textareas */
+[data-theme="dark"] .adm-input,
+[data-theme="dark"] .adm-textarea,
+[data-theme="dark"] .adm-select {
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text);
+}
+[data-theme="dark"] .adm-input::placeholder,
+[data-theme="dark"] .adm-textarea::placeholder { color: #555; }
+
+/* Cards */
+[data-theme="dark"] .adm-card { background: var(--surface); box-shadow: var(--shadow); }
+
+/* Login card */
+[data-theme="dark"] .adm-login-card { background: var(--surface); }
+[data-theme="dark"] .adm-login-card h2 { color: var(--text); }
+
+/* Section titles & labels */
+[data-theme="dark"] .adm-section-title { color: var(--text); border-bottom-color: var(--border); }
+[data-theme="dark"] .adm-subsection-title { color: var(--text); }
+[data-theme="dark"] .adm-field label { color: var(--text-muted); }
+
+/* Stat / helper text */
+[data-theme="dark"] .adm-stat-label,
+[data-theme="dark"] .adm-help { color: var(--text-muted); }
+
+/* Album & package cards */
+[data-theme="dark"] .adm-album-card,
+[data-theme="dark"] .adm-pkg-card { background: var(--surface); border-color: var(--border); }
+[data-theme="dark"] .adm-album-card-header,
+[data-theme="dark"] .adm-pkg-header { color: var(--text); }
+[data-theme="dark"] .adm-album-card-body,
+[data-theme="dark"] .adm-pkg-body { border-top-color: var(--border); background: var(--bg); }
+
+
+/* ── Theme toggle — matches portfolio exactly ── */
+.adm-theme-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sidebar-sub);
+    cursor: pointer;
+    transition: all .2s ease;
+    flex-shrink: 0;
+}
+.adm-theme-btn:hover { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+/* Light mode sidebar — button adapts */
+[data-theme="light"] .adm-theme-btn {
+    background: #f0ede8;
+    border-color: #d8d4cc;
+    color: #666;
+}
+[data-theme="light"] .adm-theme-btn:hover { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+/* Icon logic — same as portfolio */
+.adm-theme-btn .sun-icon  { display: block; }
+.adm-theme-btn .moon-icon { display: none; }
+[data-theme="dark"] .adm-theme-btn .sun-icon  { display: none; }
+[data-theme="dark"] .adm-theme-btn .moon-icon { display: block; }
+
+/* ── Sidebar light mode — full overrides ── */
+[data-theme="light"] .adm-sidebar {
+    --dark:        #ffffff;
+    --dark-2:      #f4f2ee;
+    --dark-3:      #e8e6e0;
+    --sidebar-txt: #2a2a2a;
+    --sidebar-sub: #888888;
+    border-right: 1px solid #e8e6e0;
+}
+[data-theme="light"] .adm-nav-item:hover  { color: #1a1a1a; }
+[data-theme="light"] .adm-nav-item.active { color: var(--gold); }
+
+/* View Site button — readable in both modes */
+.adm-btn--ghost {
+    color: var(--sidebar-txt);
+    border-color: rgba(128,128,128,.3);
+}
+.adm-btn--ghost:hover { background: rgba(128,128,128,.12); color: inherit; }
 
 /* ── Utility ──────────────────────────────────── */
 .adm-mt-1 { margin-top: 1rem; }
