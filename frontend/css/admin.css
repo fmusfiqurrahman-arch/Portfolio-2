@@ -1,25 +1,53 @@
 /* MRF Photography Admin — Atelier Editorial */
+/* ── Dark mode (default) — exact match to portfolio dark theme ── */
 :root, [data-theme="dark"] {
-    --bg: #0C0B09; --bg-2: #100E0B; --surface: #15110D; --surface-2: #1B1611; --surface-3: #221C16;
-    --hairline: #2A251F; --hairline-2: #3A3329;
-    --text: #EDE9E3; --text-2: #B0A89D; --text-3: #6F665C; --text-faint: #4A4239;
-    --gold: #C9A661; --gold-light: #D4B173; --gold-dark: #A8883F;
-    --gold-soft: rgba(201,166,97,0.14); --gold-glow: rgba(212,177,115,0.22);
-    --danger: #C8645B; --success: #7FA572; --info: #7CA0BD;
-    --shadow-md: 0 8px 28px rgba(0,0,0,0.45); --shadow-lg: 0 24px 64px rgba(0,0,0,0.6);
-    --font-serif: 'Playfair Display', Georgia, serif;
-    --font-italic: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-    --font-sans: 'Inter', -apple-system, sans-serif;
+    --bg:       #0C0C0C;   /* portfolio --primary-bg dark */
+    --bg-2:     #0F0F0F;
+    --surface:  #141414;   /* portfolio --secondary-bg dark */
+    --surface-2:#1A1A1A;   /* portfolio --surface-raised dark */
+    --surface-3:#1A1A1A;
+    --hairline:  #242424;  /* portfolio --border-color dark */
+    --hairline-2:#2E2E2E;
+    --text:      #EDE9E3;  /* portfolio --text-main dark */
+    --text-2:    #A09A92;  /* portfolio --text-secondary dark */
+    --text-3:    #5A554F;  /* portfolio --text-tertiary dark */
+    --text-faint:#3A3632;
+    --gold:      #D4B173;  /* portfolio --accent-gold dark */
+    --gold-light:#E2C48A;  /* portfolio --accent-gold-light dark */
+    --gold-dark: #C9A661;  /* portfolio --accent-gold-dark dark */
+    --gold-soft: rgba(212,177,115,0.14);
+    --gold-glow: rgba(212,177,115,0.22);
+    --danger:  #C8645B; --success: #7FA572; --info: #7CA0BD;
+    --shadow-md: 0 4px 28px rgba(0,0,0,0.6);
+    --shadow-lg: 0 8px 44px rgba(0,0,0,0.7);
+    --font-serif:   'Playfair Display', Georgia, serif;
+    --font-italic:  'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    --font-sans:    'Inter', -apple-system, sans-serif;
     --sidebar-w: 272px; --topbar-h: 68px;
     --radius-sm: 4px; --radius: 6px; --radius-lg: 10px;
     --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
 }
+
+/* ── Light mode — exact match to portfolio light theme ── */
 [data-theme="light"] {
-    --bg: #F6F3EC; --bg-2: #EEE9DD; --surface: #FFF; --surface-2: #FBF7EE; --surface-3: #F2ECDF;
-    --hairline: #E1DAC9; --hairline-2: #C9C0AB;
-    --text: #1A1714; --text-2: #5A5249; --text-3: #8A8077; --text-faint: #B2A99C;
-    --gold: #A8883F; --gold-light: #C9A661; --gold-dark: #8A6E2F;
-    --gold-soft: rgba(168,136,63,0.10); --gold-glow: rgba(168,136,63,0.18);
+    --bg:       #FAFAF8;   /* portfolio --primary-bg light */
+    --bg-2:     #F0EDE8;
+    --surface:  #FFFFFF;   /* portfolio --secondary-bg light */
+    --surface-2:#FAFAF8;
+    --surface-3:#F5F3EF;
+    --hairline:  #E8E6E0;  /* portfolio --border-color light */
+    --hairline-2:#D8D4CC;
+    --text:      #1A1A1A;  /* portfolio --text-main light */
+    --text-2:    #5A5A5A;  /* portfolio --text-secondary light */
+    --text-3:    #6B6B6B;  /* darkened from #9A9A9A — 4.5:1 on white */
+    --text-faint:#8A8480;  /* darkened from #C0BBBA — 3.2:1 on white */
+    --gold:      #C9A661;  /* portfolio --accent-gold light */
+    --gold-light:#D4B173;  /* portfolio --accent-gold-light light */
+    --gold-dark: #A8883F;  /* portfolio --accent-gold-dark light */
+    --gold-soft: rgba(201,166,97,0.12);
+    --gold-glow: rgba(201,166,97,0.20);
+    --shadow-md: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; transition: background 0.4s, color 0.4s; }
@@ -361,3 +389,47 @@ input, textarea, select { font-family: inherit; color: inherit; }
 .row { display: flex; align-items: center; gap: 0.6rem; }
 .mt-2 { margin-top: 1.5rem; }
 .muted { color: var(--text-3); }
+
+/* ============================================================
+   LIGHT MODE — targeted contrast fixes
+   Elements with hardcoded dark rgba backgrounds must use white
+   text regardless of theme, since their bg never changes.
+   ============================================================ */
+[data-theme="light"] .album-handle { color: rgba(255,255,255,0.85); }
+[data-theme="light"] .album-count  { color: rgba(255,255,255,0.9);  }
+[data-theme="light"] .album-tag    { color: var(--gold-light);       }
+[data-theme="light"] .photo .x     { color: rgba(255,255,255,0.85); }
+
+/* Sidebar brand — use darker gold so it's readable on warm-beige bg */
+[data-theme="light"] .brand-mark { color: var(--gold-dark); }
+
+/* Nav hover — on light sidebar rgba(white) is invisible; use dark */
+[data-theme="light"] .nav-item:hover { background: rgba(0,0,0,0.06); }
+
+/* Drawer hero title — dark overlay stays dark; force white text */
+[data-theme="light"] .drawer-hero-title { color: #EDE9E3; }
+[data-theme="light"] .drawer-hero-tag   { color: var(--gold-light);  }
+
+/* Side-search placeholder and kbd */
+[data-theme="light"] .side-search input::placeholder { color: var(--text-3); }
+[data-theme="light"] .side-search kbd { color: var(--text-2); }
+
+/* Save-bar status text */
+[data-theme="light"] .save-bar-status { color: var(--text-2); }
+
+/* Gear pill remove button — faint is too light */
+[data-theme="light"] .gear-pill button,
+[data-theme="light"] .includes-row button { color: var(--text-3); }
+
+/* Activity timeline text */
+[data-theme="light"] .act-dot { background: var(--surface); }
+
+/* Cmd palette footer */
+[data-theme="light"] .cmd-row { color: var(--text-2); }
+[data-theme="light"] .cmd-row .group { color: var(--text-3); }
+
+/* Tweak panel seg inactive buttons */
+[data-theme="light"] .tweak-seg button { color: var(--text-2); }
+
+/* Nav badge text must stay dark on gold background */
+.nav-badge { color: #1A1A1A !important; }
